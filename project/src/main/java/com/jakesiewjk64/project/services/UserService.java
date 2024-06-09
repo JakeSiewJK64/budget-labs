@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.jakesiewjk64.project.dto.UserResponseDto;
 import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.repositories.IUserRepository;
 import com.jakesiewjk64.project.specifications.UserSpecification;
@@ -22,13 +23,22 @@ public class UserService {
     return userRepository.findUserByEmail(email);
   }
 
-  public Page<User> findAll(String email, Pageable pageable) {
-    Specification<User> spec = Specification.where(null);
+  public Page<UserResponseDto> findAll(String email, Pageable pageable) throws Exception {
+    try {
+      Specification<User> spec = Specification.where(null);
 
-    if (email != null && !email.isEmpty()) {
-      spec = spec.and(UserSpecification.hasEmail(email));
+      if (email != null && !email.isEmpty()) {
+        spec = spec.and(UserSpecification.hasEmail(email));
+      }
+
+      Page<User> usersResult = userRepository.findAll(spec, pageable);
+
+      return usersResult.map(user -> new UserResponseDto(
+          user.getEmail(),
+          user.getFirst_name(),
+          user.getLast_name()));
+    } catch (Exception e) {
+      throw new Exception("Could not query for users. If this error persists please contact support.");
     }
-
-    return userRepository.findAll(spec, pageable);
   }
 }
