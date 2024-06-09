@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jakesiewjk64.project.dto.AuthRequestDto;
+import com.jakesiewjk64.project.dto.AuthResponseDto;
 import com.jakesiewjk64.project.dto.RegisterRequestDto;
 import com.jakesiewjk64.project.dto.VerifyRequestDto;
 import com.jakesiewjk64.project.services.AuthenticationService;
@@ -20,13 +21,13 @@ public class AuthenticationController {
   private final AuthenticationService authenticationService;
 
   @PostMapping("/register")
-  public ResponseEntity<Object> register(
+  public ResponseEntity<AuthResponseDto> register(
       @RequestBody RegisterRequestDto request) throws Exception {
     return ResponseEntity.ok(authenticationService.register(request));
   }
 
   @PostMapping("/authenticate")
-  public ResponseEntity<Object> authenticate(@RequestBody AuthRequestDto request) throws Exception {
+  public ResponseEntity<AuthResponseDto> authenticate(@RequestBody AuthRequestDto request) throws Exception {
     return ResponseEntity.ok(authenticationService.authenticate(request));
   }
 
