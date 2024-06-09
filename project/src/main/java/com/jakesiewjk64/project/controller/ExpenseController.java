@@ -1,5 +1,6 @@
 package com.jakesiewjk64.project.controller;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class ExpenseController {
   private final ExpenseService expenseService;
 
   @GetMapping("/expenses")
-  public ResponseEntity<Iterable<Expense>> getAllExpenses(
+  public ResponseEntity<Page<Expense>> getAllExpenses(
       @RequestParam(required = false, defaultValue = "0") int page,
       @RequestParam(required = false, defaultValue = "10") int page_size) throws Exception {
     Pageable pageable = PageRequest.of(page, page_size);
