@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jakesiewjk64.project.dto.ExpenseDto;
 import com.jakesiewjk64.project.dto.PostExpenseDto;
 import com.jakesiewjk64.project.models.Expense;
 import com.jakesiewjk64.project.services.ExpenseService;
@@ -24,7 +25,7 @@ public class ExpenseController {
   private final ExpenseService expenseService;
 
   @GetMapping("/expenses")
-  public ResponseEntity<Page<Expense>> getAllExpensesByUserId(
+  public ResponseEntity<Page<ExpenseDto>> getAllExpensesByUserId(
       @RequestParam(required = true) int user_id,
       @RequestParam(required = false, defaultValue = "0") int page,
       @RequestParam(required = false, defaultValue = "10") int page_size) throws Exception {
