@@ -1,5 +1,6 @@
 package com.jakesiewjk64.project.services;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,19 +24,25 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final PasswordEncoder passwordEncoder;
 
-  public AuthResponseDto register(RegisterRequestDto request) {
-    var user = User.builder()
-        .first_name(request.getFirstname())
-        .last_name(request.getLastname())
-        .email(request.getEmail())
-        .password(passwordEncoder.encode(request.getPassword()))
-        .build();
-    repository.save(user);
-    var token = jwtService.generateToken(user);
-    return AuthResponseDto.builder()
-        .email(user.getEmail())
-        .token(token)
-        .build();
+  public AuthResponseDto register(RegisterRequestDto request) throws Exception {
+    try {
+      var user = User.builder()
+          .first_name(request.getFirstname())
+          .last_name(request.getLastname())
+          .email(request.getEmail())
+          .password(passwordEncoder.encode(request.getPassword()))
+          .build();
+      repository.save(user);
+      var token = jwtService.generateToken(user);
+      return AuthResponseDto.builder()
+          .email(user.getEmail())
+          .token(token)
+          .build();
+    } catch (DataIntegrityViolationException e) {
+      throw new Exception("User already exists. Please try again.");
+    } catch (Exception e) {
+      throw new Exception("Could not register user. If this error persists please contact support.");
+    }
   }
 
   public AuthResponseDto authenticate(AuthRequestDto request) throws Exception {
