@@ -17,9 +17,13 @@ public class ExpenseService {
 
   private final IExpenseRepository expenseRepository;
 
-  public Page<Expense> getAllExpense(Pageable pageable) {
-    Specification<Expense> spec = Specification.where(null);
-    return expenseRepository.findAll(spec, pageable);
+  public Page<Expense> getAllExpense(Pageable pageable) throws Exception {
+    try {
+      Specification<Expense> spec = Specification.where(null);
+      return expenseRepository.findAll(spec, pageable);
+    } catch (Exception e) {
+      throw new Exception("Could not query for expenses. If this error persists please contact support.");
+    }
   }
 
   public Expense postExpense(PostExpenseDto expense) throws Exception {
@@ -31,7 +35,7 @@ public class ExpenseService {
               .date(expense.getDate())
               .build());
     } catch (Exception e) {
-      throw new Exception(e);
+      throw new Exception("Could not save expenses. If this error persists please contact support.");
     }
   }
 }
