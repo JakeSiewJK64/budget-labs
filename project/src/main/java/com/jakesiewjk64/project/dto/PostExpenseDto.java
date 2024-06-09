@@ -10,4 +10,5 @@ import lombok.Data;
 public class PostExpenseDto {
   private double amount;
   private Date date;
+  private int user_id;
 }

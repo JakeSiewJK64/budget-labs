@@ -24,4 +24,5 @@ public class Expense {
   private String id;
   private double amount;
   private Date date;
+  private int user_id;
 }

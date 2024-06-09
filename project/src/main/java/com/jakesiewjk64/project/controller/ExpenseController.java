@@ -24,12 +24,13 @@ public class ExpenseController {
   private final ExpenseService expenseService;
 
   @GetMapping("/expenses")
-  public ResponseEntity<Page<Expense>> getAllExpenses(
+  public ResponseEntity<Page<Expense>> getAllExpensesByUserId(
+      @RequestParam(required = true) int user_id,
       @RequestParam(required = false, defaultValue = "0") int page,
       @RequestParam(required = false, defaultValue = "10") int page_size) throws Exception {
     Pageable pageable = PageRequest.of(page, page_size);
     return ResponseEntity.ok(
-        expenseService.getAllExpense(pageable));
+        expenseService.getAllExpenseByUserId(pageable, user_id));
   }
 
   @PostMapping("/expenses")
