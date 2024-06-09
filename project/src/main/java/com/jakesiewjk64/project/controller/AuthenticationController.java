@@ -39,15 +39,8 @@ public class AuthenticationController {
   }
 
   @PostMapping("/authenticate")
-  public ResponseEntity<Object> authenticate(@RequestBody AuthRequestDto request) {
-    try {
-      return ResponseEntity.ok(authenticationService.authenticate(request));
-    } catch (Exception e) {
-      return new ResponseEntity<>(
-          new ErrorResponseDto("Could not authenticate user. If this error persists please contact support.",
-              HttpStatus.BAD_REQUEST),
-          HttpStatus.BAD_REQUEST);
-    }
+  public ResponseEntity<Object> authenticate(@RequestBody AuthRequestDto request) throws Exception {
+    return ResponseEntity.ok(authenticationService.authenticate(request));
   }
 
   @PostMapping("/verify")

@@ -38,20 +38,24 @@ public class AuthenticationService {
         .build();
   }
 
-  public AuthResponseDto authenticate(AuthRequestDto request) {
-    authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(
-            request.getEmail(),
-            request.getPassword()));
+  public AuthResponseDto authenticate(AuthRequestDto request) throws Exception {
+    try {
+      authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(
+              request.getEmail(),
+              request.getPassword()));
 
-    var user = repository.findUserByEmail(request.getEmail()).orElseThrow();
-    var jwtToken = jwtService.generateToken(user);
+      var user = repository.findUserByEmail(request.getEmail()).orElseThrow();
+      var jwtToken = jwtService.generateToken(user);
 
-    return AuthResponseDto
-        .builder()
-        .email(user.getEmail())
-        .token(jwtToken)
-        .build();
+      return AuthResponseDto
+          .builder()
+          .email(user.getEmail())
+          .token(jwtToken)
+          .build();
+    } catch (Exception e) {
+      throw new Exception("Could not authenticate user. If this error persists please contact support.");
+    }
   }
 
   public boolean verifyToken(VerifyRequestDto request) {
