@@ -1,0 +1,5 @@
+-- ADD USER COLUMN
+ALTER TABLE public.expense ADD user_id INT DEFAULT null;
+
+-- ADD FOREIGN KEY CONSTRAINT TO LINK EXPENSE TO STAFF
+ALTER TABLE public.expense ADD CONSTRAINT fk_user_expense FOREIGN KEY (user_id) REFERENCES public.staff (id);
