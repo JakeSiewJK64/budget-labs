@@ -14,8 +14,10 @@ const ProtectedLayout = ({
     <>
       <Navbar />
       <div className="flex justify-center">
-        <div className="flex flex-row">
-          <SideMenu routes={routes} />
+        <div className="flex flex-row gap-2">
+          <div className="max-w-[100%]">
+            <SideMenu routes={routes} />
+          </div>
           <div className="border rounded-sm ml-1 md:w-[35rem] lg:w-[65rem]">
             {children}
           </div>
