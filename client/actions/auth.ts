@@ -2,9 +2,8 @@
 
 import getAxiosInstance from "@/utils/axiosInstance";
 import { setCookie, removeCookie } from "@/utils/cookiesUtils";
-import { loginFormSchema } from "../hooks/form/useLoginForm";
+import { loginFormSchema, registerFormSchema } from "../hooks/form";
 import { z } from "zod";
-import { registerFormSchema } from "@/hooks/form/useRegisterForm";
 
 export const logoutAction = async () => {
   removeCookie("token");
