@@ -1,4 +1,9 @@
-import Navbar from "@/components/native/Navbar";
+import { Navbar, SideMenu } from "@/components/native";
+
+const routes = [
+  { path: "/dashboard", label: "Dashboard" },
+  { path: "/users", label: "Users" },
+];
 
 const ProtectedLayout = ({
   children,
@@ -8,7 +13,14 @@ const ProtectedLayout = ({
   return (
     <>
       <Navbar />
-      <>{children}</>
+      <div className="flex justify-center">
+        <div className="flex flex-row">
+          <SideMenu routes={routes} />
+          <div className="border rounded-sm ml-1 md:w-[35rem] lg:w-[65rem]">
+            {children}
+          </div>
+        </div>
+      </div>
     </>
   );
 };
