@@ -1,4 +1,4 @@
-import { useGetAllUsers } from "@/hooks";
+import { useGetAllUsers } from "@/hooks/queries";
 
 export default async function Page() {
   const { data: users } = await useGetAllUsers();
