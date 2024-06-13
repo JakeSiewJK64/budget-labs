@@ -11,8 +11,10 @@ const layout = ({
 }>) => {
   return (
     <div className="m-3">
-      <div>dashboard layout</div>
-      {children}
+      <h1 className="font-bold lg:text-3xl">
+        Dashboard
+      </h1>
+      <>{children}</>
     </div>
   );
 };
