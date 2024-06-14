@@ -38,6 +38,7 @@ public class UserService {
       Page<User> usersResult = userRepository.findAll(spec, pageable);
 
       return usersResult.map(user -> new UserResponseDto(
+          user.getId(),
           user.getEmail(),
           user.getFirst_name(),
           user.getLast_name()));
