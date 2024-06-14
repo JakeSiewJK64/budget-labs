@@ -31,7 +31,7 @@ public class ExpenseController {
 
   @GetMapping("/expenses")
   public ResponseEntity<Page<ExpenseDto>> getAllExpensesByUserId(
-      @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+    @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
       @RequestParam(required = true) int user_id,
       @RequestParam(required = false, defaultValue = "0") int page,
       @RequestParam(required = false, defaultValue = "10") int page_size) throws Exception {
@@ -50,7 +50,7 @@ public class ExpenseController {
 
   @PostMapping("/expenses")
   public ResponseEntity<Expense> postExpense(
-      @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+      @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
       @RequestBody(required = true) PostExpenseDto expense) throws Exception {
     User current_user = authenticationService.getCurrentUser(token);
 
