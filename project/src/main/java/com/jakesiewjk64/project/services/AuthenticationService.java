@@ -24,6 +24,14 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final PasswordEncoder passwordEncoder;
 
+  public int getUserIdFromJwtToken(String token) throws Exception {
+    String jwt = token.substring(7);
+    String email = jwtService.extractUsername(jwt);
+    User user = repository.findUserByEmail(email).orElseThrow();
+
+    return user.getId();
+  }
+
   public AuthResponseDto register(RegisterRequestDto request) throws Exception {
     try {
       var user = User.builder()
