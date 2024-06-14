@@ -23,6 +23,10 @@ public class UserService {
     return userRepository.findUserByEmail(email);
   }
 
+  public User saveUser(User user) {
+    return userRepository.save(user);
+  }
+
   public Page<UserResponseDto> findAll(String email, Pageable pageable) throws Exception {
     try {
       Specification<User> spec = Specification.where(null);

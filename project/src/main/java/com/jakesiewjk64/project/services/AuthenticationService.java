@@ -2,6 +2,7 @@ package com.jakesiewjk64.project.services;
 
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -11,7 +12,6 @@ import com.jakesiewjk64.project.dto.AuthResponseDto;
 import com.jakesiewjk64.project.dto.RegisterRequestDto;
 import com.jakesiewjk64.project.dto.VerifyRequestDto;
 import com.jakesiewjk64.project.models.User;
-import com.jakesiewjk64.project.repositories.IUserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,9 +20,17 @@ import lombok.RequiredArgsConstructor;
 public class AuthenticationService {
 
   private final AuthenticationManager authenticationManager;
-  private final IUserRepository repository;
+  private final UserService userService;
   private final JwtService jwtService;
   private final PasswordEncoder passwordEncoder;
+
+  public User getCurrentUser(String token) throws Exception {
+    String jwt = token.substring(7);
+    String email = jwtService.extractUsername(jwt);
+    User user = userService.findUserByEmail(email).orElseThrow();
+
+    return user;
+  }
 
   public AuthResponseDto register(RegisterRequestDto request) throws Exception {
     try {
@@ -32,7 +40,9 @@ public class AuthenticationService {
           .email(request.getEmail())
           .password(passwordEncoder.encode(request.getPassword()))
           .build();
-      repository.save(user);
+
+      userService.saveUser(user);
+
       var token = jwtService.generateToken(user);
       return AuthResponseDto.builder()
           .email(user.getEmail())
@@ -52,7 +62,7 @@ public class AuthenticationService {
               request.getEmail(),
               request.getPassword()));
 
-      var user = repository.findUserByEmail(request.getEmail()).orElseThrow();
+      var user = userService.findUserByEmail(request.getEmail()).orElseThrow();
       var jwtToken = jwtService.generateToken(user);
 
       return AuthResponseDto
@@ -60,6 +70,8 @@ public class AuthenticationService {
           .email(user.getEmail())
           .token(jwtToken)
           .build();
+    } catch (BadCredentialsException e) {
+      throw new Exception("Either your email or password was incorrect.");
     } catch (Exception e) {
       throw new Exception("Could not authenticate user. If this error persists please contact support.");
     }
