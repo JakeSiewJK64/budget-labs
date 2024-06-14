@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jakesiewjk64.project.dto.ExpenseDto;
 import com.jakesiewjk64.project.dto.PostExpenseDto;
 import com.jakesiewjk64.project.models.Expense;
+import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.services.AuthenticationService;
 import com.jakesiewjk64.project.services.ExpenseService;
 
@@ -35,9 +36,9 @@ public class ExpenseController {
       @RequestParam(required = false, defaultValue = "0") int page,
       @RequestParam(required = false, defaultValue = "10") int page_size) throws Exception {
 
-    int current_user_id = authenticationService.getUserIdFromJwtToken(token);
+    User current_user = authenticationService.getCurrentUser(token);
 
-    if (current_user_id != user_id) {
+    if (current_user.getId() != user_id) {
       throw new Exception("You are not authorized to view expense for this user.");
     }
 
@@ -51,9 +52,9 @@ public class ExpenseController {
   public ResponseEntity<Expense> postExpense(
       @RequestHeader(HttpHeaders.AUTHORIZATION) String token,
       @RequestBody(required = true) PostExpenseDto expense) throws Exception {
-    int current_user_id = authenticationService.getUserIdFromJwtToken(token);
+    User current_user = authenticationService.getCurrentUser(token);
 
-    if (current_user_id != expense.getUser_id()) {
+    if (current_user.getId() != expense.getUser_id()) {
       throw new Exception("You are not authorized to save expense for this user.");
     }
 

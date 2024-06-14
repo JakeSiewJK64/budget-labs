@@ -24,12 +24,12 @@ public class AuthenticationService {
   private final JwtService jwtService;
   private final PasswordEncoder passwordEncoder;
 
-  public int getUserIdFromJwtToken(String token) throws Exception {
+  public User getCurrentUser(String token) throws Exception {
     String jwt = token.substring(7);
     String email = jwtService.extractUsername(jwt);
     User user = userService.findUserByEmail(email).orElseThrow();
 
-    return user.getId();
+    return user;
   }
 
   public AuthResponseDto register(RegisterRequestDto request) throws Exception {
