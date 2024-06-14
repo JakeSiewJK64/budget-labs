@@ -1,7 +1,7 @@
 import { useGetAllUsers } from "@/hooks/queries";
 
 export default async function Page() {
-  const { data: users } = await useGetAllUsers();
+  const users = await useGetAllUsers();
 
   if (!users) {
     return "No Users at the moment...";
@@ -10,9 +10,9 @@ export default async function Page() {
   if (users) {
     return (
       <>
-        {users.content.map((user: User) => (
+        {users.content.map((user) => (
           <div key={user.id}>
-            <p>{user.first_name}</p>
+            <p>{user.email}</p>
           </div>
         ))}
       </>
