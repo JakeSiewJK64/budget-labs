@@ -6,15 +6,21 @@ export type PaginationURLParam = {
 };
 
 export const PaginationRequestSchema = z.object({
-  page: z.string().transform((value) => {
-    if (value === undefined || value === null) return 0;
-    if (Number.isNaN(value)) return 0;
-    return Number.parseInt(value);
-  }),
-  page_size: z.string().transform((value) => {
-    if (value === undefined || value === null) return 10;
-    return Number.parseInt(value);
-  }),
+  page: z
+    .string()
+    .optional()
+    .transform((value) => {
+      if (value === undefined || value === null) return 0;
+      if (Number.isNaN(value)) return 0;
+      return Number.parseInt(value);
+    }),
+  page_size: z
+    .string()
+    .optional()
+    .transform((value) => {
+      if (value === undefined || value === null) return 10;
+      return Number.parseInt(value);
+    }),
 });
 
 export const PaginatedResponseSchema = <T extends ZodType>(contentSchema: T) =>
