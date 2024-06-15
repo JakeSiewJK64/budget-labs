@@ -35,5 +35,7 @@ export const PaginatedResponseSchema = <T extends ZodType>(contentSchema: T) =>
     number: z.number(),
     size: z.number(),
     numberOfElements: z.number(),
+    totalPages: z.number(),
+    totalElements: z.number(),
     empty: z.boolean(),
   });

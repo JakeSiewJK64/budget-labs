@@ -11,8 +11,10 @@ import { expenseColumns } from "@/lib/columns";
 
 const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
   const user = await useGetCurrentUser();
+  const paginationInfo = PaginationRequestSchema.parse(searchParams);
   const expenses = await useGetExpenseById({
-    ...PaginationRequestSchema.parse(searchParams),
+    page: paginationInfo.page,
+    page_size: paginationInfo.page_size,
     user_id: user.id,
   });
 
@@ -50,9 +52,14 @@ const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
         <Button>New Expense</Button>
       </div>
       <GenericTable
+        paginationInfo={paginationInfo}
         className="border rounded mt-4"
+        last={expenses.last}
+        first={expenses.first}
         data={expenses.content}
         columns={expenseColumns}
+        totalElements={expenses.totalElements}
+        totalPages={expenses.totalPages}
       />
     </div>
   );
