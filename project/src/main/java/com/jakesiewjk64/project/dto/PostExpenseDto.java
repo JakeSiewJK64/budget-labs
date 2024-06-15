@@ -11,4 +11,5 @@ public class PostExpenseDto {
   private double amount;
   private Date date;
   private int user_id;
+  private String description;
 }

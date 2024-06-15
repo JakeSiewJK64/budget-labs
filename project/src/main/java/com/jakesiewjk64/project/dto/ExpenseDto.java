@@ -13,4 +13,5 @@ public class ExpenseDto {
   private String id;
   private double amount;
   private Date date;
+  private String description;
 }
