@@ -15,12 +15,12 @@ import { CiCoinInsert } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
 import { useGetCurrentUser } from "@/hooks/queries/users";
 import { useGetExpenseById } from "@/hooks/queries/expenses";
+import { PaginationRequestSchema, PaginationURLParam } from "@/types/global";
 
-const Page = async () => {
+const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
   const user = await useGetCurrentUser();
   const expenses = await useGetExpenseById({
-    page: 0,
-    page_size: 5,
+    ...PaginationRequestSchema.parse(searchParams),
     user_id: user.id,
   });
 
