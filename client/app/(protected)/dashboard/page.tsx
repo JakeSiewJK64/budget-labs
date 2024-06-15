@@ -1,21 +1,13 @@
-import { DashboardCards } from "@/components/native";
-import { Button } from "@/components/ui/button";
-import {
-  TableCaption,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-  TableFooter,
-  Table,
-} from "@/components/ui/table";
 import { MdCalendarMonth } from "react-icons/md";
 import { CiCoinInsert } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
+import { DashboardCards } from "@/components/native";
+import { Button } from "@/components/ui/button";
 import { useGetCurrentUser } from "@/hooks/queries/users";
 import { useGetExpenseById } from "@/hooks/queries/expenses";
 import { PaginationRequestSchema, PaginationURLParam } from "@/types/global";
+import { GenericTable } from "@/components/native/GenericTable";
+import { expenseColumns } from "@/lib/columns";
 
 const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
   const user = await useGetCurrentUser();
@@ -57,31 +49,11 @@ const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
       <div className="ml-auto">
         <Button>New Expense</Button>
       </div>
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Description</TableHead>
-            <TableHead>Date</TableHead>
-            <TableHead>Amount</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {expenses.content.map((expense) => (
-            <TableRow key={expense.id}>
-              <TableCell>{expense.description}</TableCell>
-              <TableCell>{expense.date}</TableCell>
-              <TableCell>{expense.amount}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+      <GenericTable
+        className="border rounded mt-4"
+        data={expenses.content}
+        columns={expenseColumns}
+      />
     </div>
   );
 };
