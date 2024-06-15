@@ -10,15 +10,16 @@ export const PaginationRequestSchema = z.object({
     .string()
     .optional()
     .transform((value) => {
-      if (value === undefined || value === null) return 0;
-      if (Number.isNaN(value)) return 0;
+      if (value === undefined || value === null || Number.isNaN(value)) {
+        return 0;
+      }
       return Number.parseInt(value);
     }),
   page_size: z
     .string()
     .optional()
     .transform((value) => {
-      if (value === undefined || value === null) return 10;
+      if (value === undefined || value === null || value === "0") return 10;
       return Number.parseInt(value);
     }),
 });
