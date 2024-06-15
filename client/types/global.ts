@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { ZodType, z } from "zod";
 
 export type PaginationURLParam = {
   page_size?: number;
@@ -17,7 +17,7 @@ export const PaginationRequestSchema = z.object({
   }),
 });
 
-export const PaginatedResponseSchema = <T>(contentSchema: z.ZodType<T>) =>
+export const PaginatedResponseSchema = <T extends ZodType>(contentSchema: T) =>
   z.object({
     content: z.array(contentSchema),
     pageable: z.object({
