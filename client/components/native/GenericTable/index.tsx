@@ -31,7 +31,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { redirect } from "next/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -141,7 +140,10 @@ export function GenericTable<TData, TValue>({
         <Select
           defaultValue={String(paginationInfo.page_size)}
           onValueChange={(value) => {
-            redirect(`?page_size=${value}&page=0`);
+            const searchParams = new URLSearchParams(window.location.search);
+            searchParams.set("page", "0");
+            searchParams.set("page_size", value);
+            window.location.search = searchParams.toString();
           }}
         >
           <SelectTrigger className="w-[180px]">
