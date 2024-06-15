@@ -61,6 +61,7 @@ const Page = async () => {
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
           <TableRow>
+            <TableHead>Description</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Amount</TableHead>
           </TableRow>
@@ -68,6 +69,7 @@ const Page = async () => {
         <TableBody>
           {expenses.content.map((expense) => (
             <TableRow key={expense.id}>
+              <TableCell>{expense.description}</TableCell>
               <TableCell>{expense.date}</TableCell>
               <TableCell>{expense.amount}</TableCell>
             </TableRow>

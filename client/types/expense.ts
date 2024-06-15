@@ -5,4 +5,13 @@ export const ExpenseSchema = z.object({
   id: z.string(),
   amount: z.number(),
   date: z.string().transform((value) => dayjs(value).format("YYYY-DD-MM")),
+  description: z
+    .string()
+    .nullable()
+    .transform((value) => {
+      if (value === null || value === undefined) {
+        return "Not Provided";
+      }
+      return value;
+    }),
 });
