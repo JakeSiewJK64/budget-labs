@@ -1,12 +1,8 @@
-"use client"
+"use client";
 
 import { useRouter } from "next/navigation";
-import { z } from "zod";
 import { registerFormAction } from "@/actions/auth";
-import {
-  useRegisterForm,
-  registerFormSchema,
-} from "@/hooks/form/useRegisterForm";
+import { useRegisterForm } from "@/hooks/form/useRegisterForm";
 import {
   FormField,
   FormItem,
@@ -22,16 +18,8 @@ export const RegisterForm = () => {
   const form = useRegisterForm();
   const router = useRouter();
 
-  async function onSubmit(values: z.infer<typeof registerFormSchema>) {
-    const res = await registerFormAction(values);
-
-    if (res === 200) {
-      router.push("/dashboard");
-    }
-  }
-
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form action={registerFormAction}>
       <div className="flex flex-col gap-[1rem]">
         <Form {...form}>
           <FormField

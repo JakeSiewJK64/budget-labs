@@ -1,10 +1,8 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { z } from "zod";
 import { loginFormAction } from "@/actions/auth";
-import { useLoginForm, loginFormSchema } from "@/hooks/form/useLoginForm";
-import { Button } from "../ui/button";
+import { useLoginForm } from "@/hooks/form/useLoginForm";
+import { useRouter } from "next/navigation";
 import {
   FormField,
   FormItem,
@@ -13,26 +11,28 @@ import {
   FormMessage,
   Form,
 } from "../ui/form";
+import { Button } from "../ui/button";
 import { Input } from "../ui/input";
+import { useToast } from "../ui/use-toast";
 
 export const LoginForm = () => {
   const form = useLoginForm();
   const router = useRouter();
-
-  async function onSubmit(values: z.infer<typeof loginFormSchema>) {
-    const res = await loginFormAction(values);
-
-    if (res === 200) {
-      router.push("/dashboard");
-    } else {
-      form.setError("password", {
-        message: "Either email or password is incorrect.",
-      });
-    }
-  }
+  const { toast } = useToast();
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
+    <form
+      action={(formVal) => {
+        loginFormAction(formVal).then((res) => {
+          if (res) {
+            toast({
+              title: "Error",
+              description: String(res.data),
+            });
+          }
+        });
+      }}
+    >
       <div className="flex flex-col gap-[1rem]">
         <Form {...form}>
           <FormField
@@ -62,11 +62,7 @@ export const LoginForm = () => {
             )}
           />
         </Form>
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={!form.formState.isValid}
-        >
+        <Button type="submit" className="w-full">
           Login
         </Button>
         <div className="mx-auto">

@@ -1,40 +1,52 @@
 "use server";
 
-import getAxiosInstance from "@/utils/axiosInstance";
 import { setCookie, removeCookie } from "@/utils/cookiesUtils";
-import { loginFormSchema, registerFormSchema } from "../hooks/form";
-import { z } from "zod";
+import { getAxiosInstance } from "@/utils";
+import { redirect } from "next/navigation";
+import { GenericResponseType } from "@/types/global";
 
 export const logoutAction = async () => {
   removeCookie("token");
 };
 
 export const loginFormAction = async (
-  loginValues: z.infer<typeof loginFormSchema>
-) => {
+  formData: FormData
+): Promise<GenericResponseType> => {
   const axios = getAxiosInstance();
-  try {
-    const res = await axios.post("/auth/authenticate", loginValues);
-    const data: { token: string; email: string } = res.data;
+  const requestObject = Object.fromEntries(formData);
+  const res = await axios
+    .post("/auth/authenticate", requestObject)
+    .catch((err) => {
+      const errorMessage = err.response.data.message;
+      return { data: errorMessage, status: 403 };
+    });
+
+  if (res.status === 200) {
+    const data: { token: string; email: string } = await res.data;
 
     setCookie({ key: "token", value: data.token });
-
-    return res.status;
-  } catch (error) {
-    return 400;
+    redirect("/dashboard");
   }
+
+  return res;
 };
 
-export const registerFormAction = async (
-  registerValues: z.infer<typeof registerFormSchema>
-) => {
+export const registerFormAction = async (formData: FormData) => {
   const axios = getAxiosInstance();
-  const res = await axios.post("/auth/register", registerValues);
-  const data: { token: string; email: string } = res.data;
+  const requestObject = Object.fromEntries(formData);
+  const res = await axios.post("/auth/register", requestObject).catch((err) => {
+    const errorMessage = err.response.data.message;
+    return { data: errorMessage, status: 403 };
+  });
 
-  setCookie({ key: "token", value: data.token });
+  if (res.status === 200) {
+    const data: { token: string; email: string } = await res.data;
 
-  return res.status;
+    setCookie({ key: "token", value: data.token });
+    redirect("/dashboard");
+  }
+
+  return res;
 };
 
 export const getIsTokenExpired = async (token?: string) => {
