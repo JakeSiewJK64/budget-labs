@@ -1,4 +1,5 @@
 import { Navbar, SideMenu } from "@/components/native";
+import { Toaster } from "@/components/ui/toaster";
 
 const routes = [
   { path: "/dashboard", label: "Dashboard" },
@@ -12,6 +13,7 @@ const ProtectedLayout = ({
 }>) => {
   return (
     <>
+      <Toaster />
       <Navbar />
       <div className="flex justify-center">
         <div className="flex flex-row gap-2">
