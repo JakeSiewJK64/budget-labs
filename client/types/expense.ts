@@ -10,7 +10,7 @@ export const ExpenseSchema = z.object({
     .nullable()
     .optional()
     .transform((value) => {
-      if (value === null || value === undefined) {
+      if (value === null || value === undefined || value.length === 0) {
         return "Not Provided";
       }
       return value;
