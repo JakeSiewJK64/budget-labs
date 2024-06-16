@@ -54,6 +54,7 @@ public class ExpenseService {
               .amount(expense.getAmount())
               .date(expense.getDate())
               .user_id(user.get().getId())
+              .description(expense.getDescription())
               .build());
     } catch (Exception e) {
       throw new Exception("Could not save expenses. If this error persists please contact support.");
