@@ -1,5 +1,10 @@
 import { ZodType, z } from "zod";
 
+export type GenericResponseType = {
+  data: unknown;
+  status: number;
+};
+
 export type PaginationURLParam = {
   page_size?: number;
   page?: number;
