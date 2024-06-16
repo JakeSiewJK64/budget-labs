@@ -1,4 +1,12 @@
 import { useLoginForm, loginFormSchema } from "./useLoginForm";
 import { useRegisterForm, registerFormSchema } from "./useRegisterForm";
+import { expenseFormSchema, useExpenseForm } from "./useGetExpenseForm";
 
-export { useLoginForm, loginFormSchema, registerFormSchema, useRegisterForm };
+export {
+  useExpenseForm,
+  useLoginForm,
+  useRegisterForm,
+  expenseFormSchema,
+  loginFormSchema,
+  registerFormSchema,
+};
