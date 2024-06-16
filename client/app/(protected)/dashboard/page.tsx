@@ -1,8 +1,7 @@
 import { MdCalendarMonth } from "react-icons/md";
 import { CiCoinInsert } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
-import { DashboardCards } from "@/components/native";
-import { Button } from "@/components/ui/button";
+import { DashboardCards, ExpenseModal } from "@/components/native";
 import { useGetCurrentUser } from "@/hooks/queries/users";
 import { useGetExpenseById } from "@/hooks/queries/expenses";
 import { PaginationRequestSchema, PaginationURLParam } from "@/types/global";
@@ -49,7 +48,7 @@ const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
         ]}
       />
       <div className="ml-auto">
-        <Button>New Expense</Button>
+        <ExpenseModal userId={String(user.id)} />
       </div>
       <GenericTable
         paginationInfo={paginationInfo}
