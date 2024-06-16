@@ -1,7 +1,9 @@
+"use server";
+
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
-const LogoutButton = () => {
+const LogoutButton = async () => {
   return (
     <Link className={buttonVariants()} href="/logout">
       Logout
