@@ -1,13 +1,9 @@
 "use server";
 
-import { setCookie, removeCookie } from "@/utils/cookiesUtils";
+import { setCookie } from "@/utils/cookiesUtils";
 import { getAxiosInstance } from "@/utils";
 import { redirect } from "next/navigation";
 import { GenericResponseType } from "@/types/global";
-
-export const logoutAction = async () => {
-  removeCookie("token");
-};
 
 export const loginFormAction = async (
   formData: FormData
