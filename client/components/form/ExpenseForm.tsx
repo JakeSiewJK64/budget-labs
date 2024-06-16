@@ -1,7 +1,10 @@
 "use client";
 
+import dayjs from "dayjs";
+import { CalendarIcon } from "lucide-react";
 import { submitExpenseAction } from "@/actions/expense";
 import { useExpenseForm } from "@/hooks/form";
+import { cn } from "@/lib/utils";
 import {
   FormControl,
   FormField,
@@ -13,6 +16,8 @@ import {
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Calendar } from "../ui/calendar";
 
 export const ExpenseForm = ({ userId }: { userId: string }) => {
   const form = useExpenseForm();
@@ -20,19 +25,24 @@ export const ExpenseForm = ({ userId }: { userId: string }) => {
 
   return (
     <form
-      action={(formData) => {
-        formData.set("user_id", userId);
+      onSubmit={form.handleSubmit((value) => {
+        const formValues = { user_id: userId, ...value };
 
-        submitExpenseAction(formData).then((res) => {
-          if (res.status) {
+        submitExpenseAction(formValues).then((res) => {
+          if (res.status === 200) {
             toast({
               title: "Success",
               description: "Successfully saved expense",
             });
-            document.getElementById('toggleExpenseModal')?.click();
+            document.getElementById("toggleExpenseModal")?.click();
+          } else {
+            toast({
+              title: "Error",
+              description: String(res.data),
+            });
           }
         });
-      }}
+      })}
     >
       <Form {...form}>
         <div className="flex flex-col gap-[1rem]">
@@ -68,7 +78,34 @@ export const ExpenseForm = ({ userId }: { userId: string }) => {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date</FormLabel>
-                <Input name="date" type="date" />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          dayjs(field.value).format("YYYY-MM-DD")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
                 <FormMessage />
               </FormItem>
             )}

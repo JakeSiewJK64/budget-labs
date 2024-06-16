@@ -1,30 +1,26 @@
 "use server";
 
-import dayjs from "dayjs";
 import { z } from "zod";
 import { GenericResponseType } from "@/types/global";
-import getAxiosInstance from "@/utils/axiosInstance";
+import { getAxiosInstance } from "@/utils";
 
 const PostRequestSchema = z.object({
-  user_id: z.preprocess((val) => Number(val), z.number()),
-  description: z.string().default(""),
-  date: z.string().default(dayjs().toISOString()),
-  amount: z.preprocess((val) => Number(val), z.number()),
+  user_id: z.string(),
+  description: z.string().min(1, "Description cannot be blank."),
+  date: z.date(),
+  amount: z.string(),
 });
 
 export async function submitExpenseAction(
-  formData: FormData
+  formData: z.infer<typeof PostRequestSchema>
 ): Promise<GenericResponseType> {
   const axios = getAxiosInstance();
-  const data = await PostRequestSchema.parseAsync(Object.fromEntries(formData));
 
-  try {
-    const res = await axios.post("/expenses", data).catch((err) => {
-      throw new Error(err.response.data.message);
-    });
+  const data = await PostRequestSchema.parseAsync(formData);
+  const res = await axios.post("/expenses", data).catch((err) => {
+    const errorMessage = err.response.data.message;
+    return { data: errorMessage, status: 403 };
+  });
 
-    return { data: res.data, status: res.status };
-  } catch (error) {
-    throw error;
-  }
+  return { data: res.data, status: res.status };
 }
