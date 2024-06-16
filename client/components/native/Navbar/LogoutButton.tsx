@@ -1,18 +1,12 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { logoutAction } from "@/actions/auth";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 const LogoutButton = () => {
-  const router = useRouter();
-  const logout = async () => {
-    await logoutAction().then(() => {
-      router.replace("/auth/login");
-    });
-  };
-
-  return <Button onClick={logout}>Logout</Button>;
+  return (
+    <Link className={buttonVariants()} href="/logout">
+      Logout
+    </Link>
+  );
 };
 
 export default LogoutButton;
