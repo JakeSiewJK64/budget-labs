@@ -1,6 +1,7 @@
 "use server";
 
 import { getIsTokenExpired } from "@/actions/auth";
+import { Toaster } from "@/components/ui/toaster";
 import { getCookie } from "@/utils/cookiesUtils";
 import { redirect } from "next/navigation";
 
@@ -17,7 +18,12 @@ const Layout = async ({
     redirect("/dashboard");
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Toaster />
+      {children}
+    </>
+  );
 };
 
 export default Layout;
