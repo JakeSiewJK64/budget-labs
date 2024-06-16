@@ -15,15 +15,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationLink,
-  PaginationNext,
-  PaginationEllipsis,
-} from "@/components/ui/pagination";
-import {
   Select,
   SelectContent,
   SelectGroup,
@@ -31,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import GenericPagination from "./GenericPagination";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -43,73 +35,6 @@ interface DataTableProps<TData, TValue> {
   totalPages?: number;
   pageOptions?: string[];
 }
-
-const getNumberedPagination = ({
-  page,
-  page_size,
-  totalPages,
-}: {
-  totalPages: number;
-  page_size: number;
-  page: number;
-}) => {
-  const firstPage = (
-    <PaginationItem key={0}>
-      <PaginationLink
-        href={`?page=0&page_size=${page_size}`}
-        isActive={page === 0}
-      >
-        1
-      </PaginationLink>
-    </PaginationItem>
-  );
-  const lastPage = (
-    <PaginationItem key={totalPages}>
-      <PaginationLink
-        href={`?page=${totalPages - 1}&page_size=${page_size}`}
-        isActive={page === totalPages - 1}
-      >
-        {totalPages}
-      </PaginationLink>
-    </PaginationItem>
-  );
-
-  if (totalPages === 0) {
-    return [firstPage];
-  }
-
-  const pages = [];
-  const currentPage = page;
-
-  pages.push(firstPage);
-
-  for (let i = 1; i < totalPages - 1; i++) {
-    if (i === currentPage || i === currentPage - 1 || i === currentPage + 1) {
-      pages.push(
-        <PaginationItem key={i}>
-          <PaginationLink
-            href={`?page=${i}&page_size=${page_size}`}
-            isActive={i === page}
-          >
-            {i + 1}
-          </PaginationLink>
-        </PaginationItem>
-      );
-    }
-
-    if (i === currentPage - 2 || i === currentPage + 2) {
-      pages.push(
-        <PaginationItem key={i}>
-          <PaginationEllipsis />
-        </PaginationItem>
-      );
-    }
-  }
-
-  pages.push(lastPage);
-
-  return pages;
-};
 
 export function GenericTable<TData, TValue>({
   columns,
@@ -163,31 +88,12 @@ export function GenericTable<TData, TValue>({
           </SelectContent>
         </Select>
         <div className="flex justify-end">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  className={first ? "pointer-events-none text-gray-500" : ""}
-                  href={`?page_size=${paginationInfo.page_size}&page=${Number(
-                    paginationInfo.page - 1
-                  )}`}
-                />
-              </PaginationItem>
-              {getNumberedPagination({
-                page: paginationInfo.page,
-                page_size: paginationInfo.page_size,
-                totalPages,
-              })}
-              <PaginationItem>
-                <PaginationNext
-                  className={last ? "pointer-events-none text-gray-500" : ""}
-                  href={`?page_size=${paginationInfo.page_size}&page=${Number(
-                    paginationInfo.page + 1
-                  )}`}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          <GenericPagination
+            first={first}
+            last={last}
+            paginationInfo={paginationInfo}
+            totalPages={totalPages}
+          />
         </div>
       </div>
       <div className={className}>
