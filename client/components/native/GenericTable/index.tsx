@@ -53,9 +53,6 @@ const getNumberedPagination = ({
   page_size: number;
   page: number;
 }) => {
-  const pages = [];
-  const currentPage = page;
-
   const firstPage = (
     <PaginationItem key={0}>
       <PaginationLink
@@ -66,7 +63,6 @@ const getNumberedPagination = ({
       </PaginationLink>
     </PaginationItem>
   );
-
   const lastPage = (
     <PaginationItem key={totalPages}>
       <PaginationLink
@@ -77,6 +73,13 @@ const getNumberedPagination = ({
       </PaginationLink>
     </PaginationItem>
   );
+
+  if (totalPages === 0) {
+    return [firstPage];
+  }
+
+  const pages = [];
+  const currentPage = page;
 
   pages.push(firstPage);
 
