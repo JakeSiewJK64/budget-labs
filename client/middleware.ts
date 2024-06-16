@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { getCookie } from "./utils/cookiesUtils";
 import { getIsTokenExpired } from "./actions/auth";
 
@@ -16,15 +16,21 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path);
   const isAuthRoute = authRoutes.includes(path);
 
+  if (path === "/logout") {
+    const response = NextResponse.redirect(new URL("/auth/login", request.url));
+    response.cookies.delete("token");
+    return response;
+  }
+
   if (isAuthRoute) {
-    return null;
+    return NextResponse.next();
   }
 
   if (!authenticated && !isPublicRoute) {
     return Response.redirect(new URL("/auth/login", nextUrl));
   }
 
-  return null;
+  return NextResponse.next();
 }
 
 export const config = {
