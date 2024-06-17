@@ -45,7 +45,7 @@ export const registerFormAction = async (formData: FormData) => {
   return res;
 };
 
-export const getIsTokenExpired = async (token?: string) => {
+export const getIsTokenExpired = async (token?: string): Promise<boolean> => {
   if (token) {
     const axios = getAxiosInstance();
     const res = await axios
