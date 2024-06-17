@@ -1,6 +1,6 @@
 "use server";
 
-import { setCookie } from "@/utils/cookiesUtils";
+import { getCookie, setCookie } from "@/utils/cookiesUtils";
 import { getAxiosInstance } from "@/utils";
 import { redirect } from "next/navigation";
 import { GenericResponseType } from "@/types/global";
@@ -45,7 +45,9 @@ export const registerFormAction = async (formData: FormData) => {
   return res;
 };
 
-export const getIsTokenExpired = async (token?: string): Promise<boolean> => {
+export const getIsTokenExpired = async (): Promise<boolean> => {
+  const token = getCookie("token")?.value;
+
   if (token) {
     const axios = getAxiosInstance();
     const res = await axios
