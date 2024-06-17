@@ -1,5 +1,6 @@
 package com.jakesiewjk64.project.models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import jakarta.persistence.Entity;
@@ -26,4 +27,16 @@ public class Expense {
   private Date date;
   private String description;
   private int user_id;
+
+  /**
+   * Returns true if both dates are the same
+   * 
+   * @param date
+   * @return boolean
+   */
+  public boolean compareDate(Date date) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd 00:00:00.0");
+    String target_date = sdf.format(date);
+    return this.date.toString().equals(target_date);
+  }
 }
