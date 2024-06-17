@@ -11,3 +11,8 @@ sudo docker-compose up
 
 # SWAGGER API DOCS
 located at `http://localhost:8080/swagger-ui/index.html`. 
+
+# SCREENSHOTS
+![dashboard](./screenshots/dashboard.png)
+![register](./screenshots/register.png)
+![login](./screenshots/login.png)
