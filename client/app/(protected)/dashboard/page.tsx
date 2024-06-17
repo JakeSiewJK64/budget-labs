@@ -3,7 +3,10 @@ import { CiCoinInsert } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
 import { DashboardCards, ExpenseModal } from "@/components/native";
 import { useGetCurrentUser } from "@/hooks/queries/users";
-import { useGetExpenseById } from "@/hooks/queries/expenses";
+import {
+  useGetExpenseById,
+  useGetExpenseStatsByUserId,
+} from "@/hooks/queries/expenses";
 import { PaginationRequestSchema, PaginationURLParam } from "@/types/global";
 import { GenericTable } from "@/components/native/GenericTable";
 import { expenseColumns } from "@/lib/columns";
@@ -11,6 +14,10 @@ import { expenseColumns } from "@/lib/columns";
 const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
   const user = await useGetCurrentUser();
   const paginationInfo = PaginationRequestSchema.parse(searchParams);
+  const stats = await useGetExpenseStatsByUserId({
+    user_id: user.id,
+    date: new Date(),
+  });
   const expenses = await useGetExpenseById({
     page: paginationInfo.page,
     page_size: paginationInfo.page_size,
@@ -30,19 +37,19 @@ const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
           {
             color: "#f97316",
             title: "Total spending this month",
-            value: 1000,
+            value: stats.total_expense,
             icon: <FaMoneyBill color="white" />,
           },
           {
             color: "#ef4444",
             title: "Highest spending this month",
-            value: 20,
+            value: stats.current_month_highest,
             icon: <MdCalendarMonth color="white" />,
           },
           {
             color: "#4f46e5",
             title: "Total spending today",
-            value: 10,
+            value: stats.current_day_highest,
             icon: <CiCoinInsert color="white" />,
           },
         ]}

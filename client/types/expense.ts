@@ -16,3 +16,9 @@ export const ExpenseSchema = z.object({
       return value;
     }),
 });
+
+export const ExpenseStatsSchema = z.object({
+  total_expense: z.number(),
+  current_month_highest: z.number(),
+  current_day_highest: z.number(),
+});
