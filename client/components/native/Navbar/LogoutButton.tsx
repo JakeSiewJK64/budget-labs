@@ -5,7 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 
 const LogoutButton = async () => {
   return (
-    <Link className={buttonVariants()} href="/logout">
+    <Link className={buttonVariants()} href="/logout" target="_top">
       Logout
     </Link>
   );
