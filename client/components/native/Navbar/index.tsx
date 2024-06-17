@@ -5,7 +5,7 @@ const Navbar = () => {
   return (
     <Card className="rounded-sm p-3 m-2 flex">
       <a className="my-auto" href="/dashboard">
-        My Application
+        My Budget Lab
       </a>
       <div className="ml-auto">
         <a href="/users" className="mr-5">
