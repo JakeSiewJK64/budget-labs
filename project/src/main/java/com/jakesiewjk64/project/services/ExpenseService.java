@@ -1,8 +1,10 @@
 package com.jakesiewjk64.project.services;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -19,6 +21,7 @@ import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.repositories.IExpenseRepository;
 import com.jakesiewjk64.project.repositories.IUserRepository;
 
+import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -68,14 +71,18 @@ public class ExpenseService {
     }
   }
 
-  public Page<ExpenseDto> getAllExpenseByUserId(Pageable pageable, int user_id) throws Exception {
+  public Page<ExpenseDto> getAllExpenseByUserId(Pageable pageable, Map<String, Object> condition) throws Exception {
     try {
-      Specification<Expense> spec = Specification
-          .where((root, query, criteriaBuilder) -> criteriaBuilder.isNotNull(root.get("user_id")));
+      Specification<Expense> specs = Specification.where(null);
 
-      spec = spec.and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("user_id"), user_id));
+      String user_id = String.valueOf(condition.get("user_id"));
+      LocalDate start_date = (LocalDate) condition.get("start_date");
+      LocalDate end_date = (LocalDate) condition.get("end_date");
 
-      Page<Expense> expensePage = expenseRepository.findAll(spec, pageable);
+      specs = specs.and(equalsUserId(Integer.valueOf(user_id)));
+      specs = specs.and(withinDateRange(start_date, end_date));
+
+      Page<Expense> expensePage = expenseRepository.findAll(specs, pageable);
 
       return expensePage.map(expense -> modelMapper.map(expense, ExpenseDto.class));
     } catch (Exception e) {
@@ -102,5 +109,20 @@ public class ExpenseService {
     } catch (Exception e) {
       throw new Exception("Could not save expenses. If this error persists please contact support.");
     }
+  }
+
+  private Specification<Expense> equalsUserId(Integer user_id) {
+    return (root, query, builder) -> builder.equal(root.get("user_id"), user_id);
+  }
+
+  private Specification<Expense> withinDateRange(LocalDate startDate, LocalDate endDate) {
+    return (root, query, builder) -> {
+      Predicate greaterThanOrEqualToStart = builder.greaterThan(root.get("date").as(LocalDate.class),
+          startDate);
+      Predicate beforeEndDate = builder.lessThanOrEqualTo(root.get("date").as(LocalDate.class),
+          endDate);
+
+      return builder.and(greaterThanOrEqualToStart, beforeEndDate);
+    };
   }
 }
