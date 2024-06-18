@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +53,8 @@ public class ExpenseController {
   @GetMapping("/expenses")
   public ResponseEntity<Page<ExpenseDto>> getAllExpensesByUserId(
       @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
+      @RequestParam(required = false, defaultValue = "date") String sortBy,
+      @RequestParam(required = false, defaultValue = "0") String order,
       @RequestParam(required = true) int user_id,
       @RequestParam(required = false, defaultValue = "0") int page,
       @RequestParam(required = false, defaultValue = "10") int page_size) throws Exception {
@@ -62,7 +65,8 @@ public class ExpenseController {
       throw new Exception("You are not authorized to view expense for this user.");
     }
 
-    Pageable pageable = PageRequest.of(page, page_size);
+    Sort sort = Integer.parseInt(order) == 0 ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+    Pageable pageable = PageRequest.of(page, page_size, sort);
 
     return ResponseEntity.ok(
         expenseService.getAllExpenseByUserId(pageable, user_id));
