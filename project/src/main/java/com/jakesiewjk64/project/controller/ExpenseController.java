@@ -1,7 +1,9 @@
 package com.jakesiewjk64.project.controller;
 
+import java.time.LocalDate;
 import java.util.Date;
-
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +56,9 @@ public class ExpenseController {
   public ResponseEntity<Page<ExpenseDto>> getAllExpensesByUserId(
       @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
       @RequestParam(required = false, defaultValue = "date") String sortBy,
-      @RequestParam(required = false, defaultValue = "0") String order,
+      @RequestParam(required = false) String order,
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(required = false) LocalDate start_date,
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(required = false) LocalDate end_date,
       @RequestParam(required = true) int user_id,
       @RequestParam(required = false, defaultValue = "0") int page,
       @RequestParam(required = false, defaultValue = "10") int page_size) throws Exception {
@@ -68,8 +72,10 @@ public class ExpenseController {
     Sort sort = Integer.parseInt(order) == 0 ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
     Pageable pageable = PageRequest.of(page, page_size, sort);
 
+    Map<String, Object> conditionMap = buildConditionMap(start_date, end_date, user_id);
+
     return ResponseEntity.ok(
-        expenseService.getAllExpenseByUserId(pageable, user_id));
+        expenseService.getAllExpenseByUserId(pageable, conditionMap));
   }
 
   @PostMapping("/expenses")
@@ -84,5 +90,20 @@ public class ExpenseController {
 
     return ResponseEntity.ok(
         expenseService.postExpense(expense));
+  }
+
+  private Map<String, Object> buildConditionMap(LocalDate start_date, LocalDate end_date, int user_id) {
+    Map<String, Object> conditionMap = new HashMap<>();
+    conditionMap.put("user_id", user_id);
+
+    if (start_date != null) {
+      conditionMap.put("start_date", start_date);
+    }
+
+    if (end_date != null) {
+      conditionMap.put("end_date", end_date);
+    }
+
+    return conditionMap;
   }
 }
