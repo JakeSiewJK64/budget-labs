@@ -56,7 +56,7 @@ public class ExpenseController {
   public ResponseEntity<Page<ExpenseDto>> getAllExpensesByUserId(
       @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
       @RequestParam(required = false, defaultValue = "date") String sortBy,
-      @RequestParam(required = false) String order,
+      @RequestParam(required = false, defaultValue = "0") String order,
       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(required = false) LocalDate start_date,
       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(required = false) LocalDate end_date,
       @RequestParam(required = true) int user_id,
