@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { MdCalendarMonth } from "react-icons/md";
 import { CiCoinInsert } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
@@ -24,7 +25,7 @@ const Page = async ({
   const paginationInfo = PaginationRequestSchema.parse(searchParams);
   const stats = await useGetExpenseStatsByUserId({
     user_id: user.id,
-    date: new Date(),
+    target_date: dayjs().format("YYYY-MM-DD"),
   });
   const expenses = await useGetExpenseById({
     page: paginationInfo.page,
