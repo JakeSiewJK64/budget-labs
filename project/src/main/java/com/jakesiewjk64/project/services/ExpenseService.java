@@ -1,8 +1,7 @@
 package com.jakesiewjk64.project.services;
 
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,17 +31,12 @@ public class ExpenseService {
   private final IUserRepository userRepository;
   private final ModelMapper modelMapper;
 
-  public ExpenseStatsDto getExpenseStats(int user_id, Date target_date) throws Exception {
+  public ExpenseStatsDto getExpenseStats(int user_id, LocalDate target_date) throws Exception {
     try {
-
-      // set default target date to current system date
-      Calendar date = Calendar.getInstance();
-      date.setTime(target_date != null ? target_date : new Date());
-
       // query for expenses
       List<Expense> expenses = expenseRepository.getByYearAndMonth(
-          date.get(Calendar.YEAR),
-          date.get(Calendar.MONTH) + 1,
+          target_date.getYear(),
+          target_date.getMonthValue(),
           user_id);
 
       double total = 0f;
@@ -56,7 +50,8 @@ public class ExpenseService {
           current_month_highest = e.getAmount();
         }
 
-        if (e.compareDate(date.getTime()) && e.getAmount() > current_day_highest) {
+        if (target_date.isEqual(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+            && e.getAmount() > current_day_highest) {
           current_day_highest = e.getAmount();
         }
       }
