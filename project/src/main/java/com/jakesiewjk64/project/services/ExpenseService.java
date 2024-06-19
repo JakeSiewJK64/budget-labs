@@ -1,8 +1,7 @@
 package com.jakesiewjk64.project.services;
 
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,8 +19,8 @@ import com.jakesiewjk64.project.models.Expense;
 import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.repositories.IExpenseRepository;
 import com.jakesiewjk64.project.repositories.IUserRepository;
+import com.jakesiewjk64.project.specifications.ExpenseSpecification;
 
-import jakarta.persistence.criteria.Predicate;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -32,17 +31,12 @@ public class ExpenseService {
   private final IUserRepository userRepository;
   private final ModelMapper modelMapper;
 
-  public ExpenseStatsDto getExpenseStats(int user_id, Date target_date) throws Exception {
+  public ExpenseStatsDto getExpenseStats(int user_id, LocalDate target_date) throws Exception {
     try {
-
-      // set default target date to current system date
-      Calendar date = Calendar.getInstance();
-      date.setTime(target_date != null ? target_date : new Date());
-
       // query for expenses
       List<Expense> expenses = expenseRepository.getByYearAndMonth(
-          date.get(Calendar.YEAR),
-          date.get(Calendar.MONTH) + 1,
+          target_date.getYear(),
+          target_date.getMonthValue(),
           user_id);
 
       double total = 0f;
@@ -56,7 +50,8 @@ public class ExpenseService {
           current_month_highest = e.getAmount();
         }
 
-        if (e.compareDate(date.getTime()) && e.getAmount() > current_day_highest) {
+        if (target_date.isEqual(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+            && e.getAmount() > current_day_highest) {
           current_day_highest = e.getAmount();
         }
       }
@@ -79,8 +74,8 @@ public class ExpenseService {
       LocalDate start_date = (LocalDate) condition.get("start_date");
       LocalDate end_date = (LocalDate) condition.get("end_date");
 
-      specs = specs.and(equalsUserId(Integer.valueOf(user_id)));
-      specs = specs.and(withinDateRange(start_date, end_date));
+      specs = specs.and(ExpenseSpecification.equalsUserId(Integer.valueOf(user_id)));
+      specs = specs.and(ExpenseSpecification.withinDateRange(start_date, end_date));
 
       Page<Expense> expensePage = expenseRepository.findAll(specs, pageable);
 
@@ -109,20 +104,5 @@ public class ExpenseService {
     } catch (Exception e) {
       throw new Exception("Could not save expenses. If this error persists please contact support.");
     }
-  }
-
-  private Specification<Expense> equalsUserId(Integer user_id) {
-    return (root, query, builder) -> builder.equal(root.get("user_id"), user_id);
-  }
-
-  private Specification<Expense> withinDateRange(LocalDate startDate, LocalDate endDate) {
-    return (root, query, builder) -> {
-      Predicate greaterThanOrEqualToStart = builder.greaterThan(root.get("date").as(LocalDate.class),
-          startDate);
-      Predicate beforeEndDate = builder.lessThanOrEqualTo(root.get("date").as(LocalDate.class),
-          endDate);
-
-      return builder.and(greaterThanOrEqualToStart, beforeEndDate);
-    };
   }
 }

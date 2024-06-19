@@ -1,7 +1,6 @@
 package com.jakesiewjk64.project.controller;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.data.domain.Page;
@@ -39,7 +38,7 @@ public class ExpenseController {
   @GetMapping("/expenses/getExpenseStatsByUserId")
   public ResponseEntity<ExpenseStatsDto> getExpenseStatsByUserId(
       @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
-      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(required = false) Date target_date,
+      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(required = false) LocalDate target_date,
       @RequestParam(required = true) int user_id) throws Exception {
 
     User current_user = authenticationService.getCurrentUser(token);
