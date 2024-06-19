@@ -10,6 +10,11 @@ export type PaginationURLParam = {
   page?: number;
 };
 
+export type DateRangeURLParam = {
+  start_date?: string;
+  end_date?: string;
+};
+
 export const PaginationRequestSchema = z.object({
   page: z
     .string()

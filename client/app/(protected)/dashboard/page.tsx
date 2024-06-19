@@ -7,11 +7,19 @@ import {
   useGetExpenseById,
   useGetExpenseStatsByUserId,
 } from "@/hooks/queries/expenses";
-import { PaginationRequestSchema, PaginationURLParam } from "@/types/global";
+import {
+  DateRangeURLParam,
+  PaginationRequestSchema,
+  PaginationURLParam,
+} from "@/types/global";
 import { GenericTable } from "@/components/native/GenericTable";
 import { expenseColumns } from "@/lib/columns";
 
-const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
+const Page = async ({
+  searchParams,
+}: {
+  searchParams: PaginationURLParam & DateRangeURLParam;
+}) => {
   const user = await useGetCurrentUser();
   const paginationInfo = PaginationRequestSchema.parse(searchParams);
   const stats = await useGetExpenseStatsByUserId({
@@ -22,6 +30,8 @@ const Page = async ({ searchParams }: { searchParams: PaginationURLParam }) => {
     page: paginationInfo.page,
     page_size: paginationInfo.page_size,
     user_id: user.id,
+    start_date: searchParams.start_date,
+    end_date: searchParams.end_date,
   });
 
   return (
