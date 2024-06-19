@@ -22,7 +22,7 @@ export async function useGetExpenseStatsByUserId(args: {
   return ExpenseStatsSchema.parseAsync(res.data);
 }
 
-export async function useGetExpenseById(args: {
+export async function useGetAllExpensesById(args: {
   user_id: number;
   page_size: number;
   page: number;

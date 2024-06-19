@@ -5,7 +5,7 @@ import { FaMoneyBill } from "react-icons/fa";
 import { DashboardCards, ExpenseModal } from "@/components/native";
 import { useGetCurrentUser } from "@/hooks/queries/users";
 import {
-  useGetExpenseById,
+  useGetAllExpensesById,
   useGetExpenseStatsByUserId,
 } from "@/hooks/queries/expenses";
 import {
@@ -28,7 +28,7 @@ const Page = async ({
     user_id: user.id,
     target_date: dayjs().format("YYYY-MM-DD"),
   });
-  const expenses = await useGetExpenseById({
+  const expenses = await useGetAllExpensesById({
     page: paginationInfo.page,
     page_size: paginationInfo.page_size,
     user_id: user.id,
