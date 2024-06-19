@@ -15,6 +15,7 @@ import {
 } from "@/types/global";
 import { GenericTable } from "@/components/native/GenericTable";
 import { expenseColumns } from "@/lib/columns";
+import DateRangePicker from "@/components/native/DatePickers/DateRangePicker";
 
 const Page = async ({
   searchParams,
@@ -43,6 +44,7 @@ const Page = async ({
           {user.first_name} {user.last_name}
         </strong>
       </p>
+      <DateRangePicker />
       <DashboardCards
         infoArray={[
           {
