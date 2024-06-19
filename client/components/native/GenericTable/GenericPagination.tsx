@@ -74,7 +74,9 @@ const getNumberedPagination = ({
     }
   }
 
-  pages.push(lastPage);
+  if (totalPages > 1) {
+    pages.push(lastPage);
+  }
 
   return pages;
 };
