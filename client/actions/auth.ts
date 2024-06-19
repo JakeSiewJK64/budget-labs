@@ -56,5 +56,5 @@ export const getIsTokenExpired = async (): Promise<boolean> => {
     return res;
   }
 
-  return false;
+  return true;
 };
