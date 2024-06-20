@@ -5,6 +5,7 @@ import { GenericResponseType } from "@/types/global";
 import { getAxiosInstance } from "@/utils";
 
 const PostRequestSchema = z.object({
+  id: z.string().optional().nullable(),
   user_id: z.string(),
   description: z.string().min(1, "Description cannot be blank."),
   date: z.date(),
