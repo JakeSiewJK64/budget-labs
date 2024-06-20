@@ -3,6 +3,7 @@
 import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
 import { ExpenseSchema } from "@/types/expense";
+import { buttonVariants } from "@/components/ui/button";
 
 export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
   {
@@ -16,5 +17,14 @@ export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
   {
     accessorKey: "amount",
     header: "Amount",
+  },
+  {
+    header: "",
+    accessorKey: "id",
+    cell: (info) => (
+      <a className={buttonVariants()} href={`/expenses/${info.getValue()}`}>
+        View Details
+      </a>
+    ),
   },
 ];
