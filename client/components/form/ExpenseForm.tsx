@@ -18,15 +18,27 @@ import { Input } from "../ui/input";
 import { useToast } from "../ui/use-toast";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
+import { z } from "zod";
+import { ExpenseSchema } from "@/types/expense";
 
-export const ExpenseForm = ({ userId }: { userId: string }) => {
-  const form = useExpenseForm();
+export const ExpenseForm = ({
+  userId,
+  defaultValues,
+}: {
+  userId: string;
+  defaultValues?: z.infer<typeof ExpenseSchema>;
+}) => {
+  const form = useExpenseForm({ defaultValues: defaultValues });
   const { toast } = useToast();
 
   return (
     <form
       onSubmit={form.handleSubmit((value) => {
-        const formValues = { user_id: userId, ...value };
+        const formValues = {
+          ...value,
+          ...(defaultValues && { id: defaultValues.id }),
+          ...(userId && { user_id: userId }),
+        };
 
         submitExpenseAction(formValues).then((res) => {
           if (res.status === 200) {

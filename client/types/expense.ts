@@ -3,7 +3,8 @@ import { z } from "zod";
 
 export const ExpenseSchema = z.object({
   id: z.string(),
-  amount: z.string(),
+  amount: z.number(),
+  user_id: z.string(),
   date: z.string().transform((value) => dayjs(value).format("YYYY-DD-MM")),
   description: z
     .string()
