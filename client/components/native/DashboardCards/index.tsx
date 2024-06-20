@@ -11,7 +11,7 @@ type CardContainerArgs = {
 const CardContainer = ({ title, value, color, icon }: CardContainerArgs) => {
   return (
     <Card
-      className="p-3 text-center font-bold text-white text-xl shadow-lg"
+      className="p-3 text-center font-bold text-white text-xl shadow-lg relative"
       style={{
         backgroundColor: color,
       }}
