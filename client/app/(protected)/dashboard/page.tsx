@@ -16,6 +16,7 @@ import {
 import { GenericTable } from "@/components/native/GenericTable";
 import { expenseColumns } from "@/lib/columns";
 import DateRangePicker from "@/components/native/DatePickers/DateRangePicker";
+import { AArrowUp } from "lucide-react";
 
 const Page = async ({
   searchParams,
@@ -61,9 +62,15 @@ const Page = async ({
           },
           {
             color: "#4f46e5",
-            title: "Total spending today",
+            title: "Highest spending today",
             value: stats.current_day_highest,
             icon: <CiCoinInsert color="white" />,
+          },
+          {
+            color: "#f1c40f",
+            title: "Total spending today",
+            value: stats.current_day_total,
+            icon: <AArrowUp color="white" />,
           },
         ]}
       />
