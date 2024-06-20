@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { MdCalendarMonth } from "react-icons/md";
+import { MdCalendarMonth, MdCheckCircle } from "react-icons/md";
 import { CiCoinInsert } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
 import { DashboardCards, ExpenseModal } from "@/components/native";
@@ -16,7 +16,6 @@ import {
 import { GenericTable } from "@/components/native/GenericTable";
 import { expenseColumns } from "@/lib/columns";
 import DateRangePicker from "@/components/native/DatePickers/DateRangePicker";
-import { AArrowUp } from "lucide-react";
 
 const Page = async ({
   searchParams,
@@ -70,7 +69,7 @@ const Page = async ({
             color: "#f1c40f",
             title: "Total spending today",
             value: stats.current_day_total,
-            icon: <AArrowUp color="white" />,
+            icon: <MdCheckCircle color="white" />,
           },
         ]}
       />
