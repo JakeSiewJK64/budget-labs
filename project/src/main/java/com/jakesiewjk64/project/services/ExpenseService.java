@@ -106,14 +106,6 @@ public class ExpenseService {
     }
   }
 
-  public Expense updateExpense(Expense expense) throws Exception {
-    try {
-      return expenseRepository.save(expense);
-    } catch (Exception e) {
-      throw new Exception("There was a problem updating expense. If this error persists please contact support.");
-    }
-  }
-
   public Expense getExpenseById(String expense_id, int user_id) throws Exception {
     try {
       return expenseRepository.findOne(ExpenseSpecification.getExpenseById(expense_id, user_id)).orElseThrow();
