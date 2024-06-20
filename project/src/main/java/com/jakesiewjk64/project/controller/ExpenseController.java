@@ -11,7 +11,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jakesiewjk64.project.dto.ExpenseDto;
 import com.jakesiewjk64.project.dto.ExpenseStatsDto;
-import com.jakesiewjk64.project.dto.PostExpenseDto;
 import com.jakesiewjk64.project.models.Expense;
 import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.services.AuthenticationService;
@@ -96,20 +94,6 @@ public class ExpenseController {
   @PostMapping("/expenses")
   public ResponseEntity<Expense> postExpense(
       @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
-      @RequestBody(required = true) PostExpenseDto expense) throws Exception {
-    User current_user = authenticationService.getCurrentUser(token);
-
-    if (current_user.getId() != expense.getUser_id()) {
-      throw new Exception("You are not authorized to save expense for this user.");
-    }
-
-    return ResponseEntity.ok(
-        expenseService.postExpense(expense));
-  }
-
-  @PatchMapping("/expenses")
-  public ResponseEntity<Expense> updateExpense(
-      @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
       @RequestBody(required = true) Expense expense) throws Exception {
     User current_user = authenticationService.getCurrentUser(token);
 
@@ -118,7 +102,7 @@ public class ExpenseController {
     }
 
     return ResponseEntity.ok(
-        expenseService.updateExpense(expense));
+        expenseService.postExpense(expense));
   }
 
   private Map<String, Object> buildConditionMap(LocalDate start_date, LocalDate end_date, int user_id) {
