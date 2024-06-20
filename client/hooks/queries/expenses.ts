@@ -55,7 +55,7 @@ export async function useGetExpenseById(args: {
 }): Promise<z.output<typeof ExpenseSchema>> {
   const axios = getAxiosInstance();
   const res = await axios
-    .get("/expenses", {
+    .get("/expenses/getExpenseById", {
       params: {
         ...args,
       },
