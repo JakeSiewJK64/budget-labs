@@ -46,7 +46,7 @@ export async function useGetAllExpensesById(args: {
       throw new Error(err.response.data.message);
     });
 
-  return ExpenseResponseSchema.parseAsync(res.data);
+  return res.data;
 }
 
 export async function useGetExpenseById(args: {
