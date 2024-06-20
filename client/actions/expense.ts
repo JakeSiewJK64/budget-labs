@@ -9,6 +9,7 @@ const PostRequestSchema = z.object({
   description: z.string().min(1, "Description cannot be blank."),
   date: z.date(),
   amount: z.string(),
+  expense_id: z.string().optional().nullable(),
 });
 
 export async function submitExpenseAction(

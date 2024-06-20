@@ -8,7 +8,7 @@ const expenseFormSchema = z.object({
   description: z.string().min(1, {
     message: "Description cannot be empty.",
   }),
-  amount: z.number(),
+  amount: z.string(),
   date: z.date(),
 });
 
@@ -20,7 +20,7 @@ const useExpenseForm = ({
   const loginForm = useForm<z.infer<typeof expenseFormSchema>>({
     resolver: zodResolver(expenseFormSchema),
     defaultValues: {
-      amount: defaultValues?.amount ?? 0,
+      amount: defaultValues?.amount ?? "0",
       date: dayjs(defaultValues?.date ?? dayjs()).toDate(),
       description: defaultValues?.description ?? "",
     },
