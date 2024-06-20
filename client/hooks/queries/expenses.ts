@@ -48,3 +48,21 @@ export async function useGetAllExpensesById(args: {
 
   return ExpenseResponseSchema.parseAsync(res.data);
 }
+
+export async function useGetExpenseById(args: {
+  user_id: number;
+  expense_id: string;
+}): Promise<z.output<typeof ExpenseSchema>> {
+  const axios = getAxiosInstance();
+  const res = await axios
+    .get("/expenses", {
+      params: {
+        ...args,
+      },
+    })
+    .catch((err) => {
+      throw new Error(err.response.data.message);
+    });
+
+  return res.data;
+}
