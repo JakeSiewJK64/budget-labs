@@ -4,7 +4,9 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -111,9 +113,27 @@ public class ExpenseService {
     }
   }
 
+  public String deleteExpense(String expense_id, int user_id) throws Exception {
+    try {
+      int affectedRows = expenseRepository.deleteById(UUID.fromString(expense_id), user_id);
+
+      if (affectedRows == 0) {
+        throw new NoSuchElementException("Expense with that id does not exist.");
+      }
+
+      return expense_id;
+    } catch (NoSuchElementException e) {
+      throw new Exception("Expense with that id does not exist.");
+    } catch (Exception e) {
+      throw new Exception("Could not delete expense. If this error persists please contact support.");
+    }
+  }
+
   public Expense getExpenseById(String expense_id, int user_id) throws Exception {
     try {
       return expenseRepository.findOne(ExpenseSpecification.getExpenseById(expense_id, user_id)).orElseThrow();
+    } catch (NoSuchElementException e) {
+      throw new Exception("Expense with that id does not exist.");
     } catch (Exception e) {
       throw new Exception("There was a problem getting the expense. If this error persists please contact support.");
     }
