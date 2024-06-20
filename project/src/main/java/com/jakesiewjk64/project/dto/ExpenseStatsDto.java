@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ExpenseStatsDto {
   private double total_expense;
+  private double current_day_total;
   private double current_month_highest;
   private double current_day_highest;
 }

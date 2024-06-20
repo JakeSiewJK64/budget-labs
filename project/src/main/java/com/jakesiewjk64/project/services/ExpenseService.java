@@ -38,7 +38,8 @@ public class ExpenseService {
           target_date.getMonthValue(),
           user_id);
 
-      double total = 0f;
+      double total = 0;
+      double current_day_total = 0;
       double current_month_highest = 0;
       double current_day_highest = 0;
 
@@ -49,15 +50,19 @@ public class ExpenseService {
           current_month_highest = e.getAmount();
         }
 
-        if (target_date.isEqual(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
-            && e.getAmount() > current_day_highest) {
-          current_day_highest = e.getAmount();
+        if (target_date.isEqual(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+          current_day_total += e.getAmount();
+
+          if (e.getAmount() > current_day_highest) {
+            current_day_highest = e.getAmount();
+          }
         }
       }
 
       return ExpenseStatsDto.builder()
           .current_month_highest(current_month_highest)
           .current_day_highest(current_day_highest)
+          .current_day_total(current_day_total)
           .total_expense(total)
           .build();
     } catch (Exception e) {
