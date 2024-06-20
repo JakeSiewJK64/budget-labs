@@ -16,3 +16,6 @@ located at `http://localhost:8080/swagger-ui/index.html`.
 ![dashboard](./screenshots/dashboard.png)
 ![register](./screenshots/register.png)
 ![login](./screenshots/login.png)
+![expense-details](./screenshots/expense-details.png)
+![expense-date-filter](./screenshots/expense-date-filter.png)
+![new-expense](./screenshots/new-expense.png)
