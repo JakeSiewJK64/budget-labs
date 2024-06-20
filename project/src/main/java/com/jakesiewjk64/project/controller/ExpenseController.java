@@ -10,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -103,6 +104,16 @@ public class ExpenseController {
 
     return ResponseEntity.ok(
         expenseService.postExpense(expense));
+  }
+
+  @DeleteMapping("/expenses")
+  public ResponseEntity<String> deleteExpense(
+      @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
+      @RequestParam(required = true) String expense_id) throws Exception {
+    User current_user = authenticationService.getCurrentUser(token);
+
+    return ResponseEntity.ok(
+        expenseService.deleteExpense(expense_id, current_user.getId()));
   }
 
   private Map<String, Object> buildConditionMap(LocalDate start_date, LocalDate end_date, int user_id) {
