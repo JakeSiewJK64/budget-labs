@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import com.jakesiewjk64.project.dto.ExpenseDto;
 import com.jakesiewjk64.project.dto.ExpenseStatsDto;
-import com.jakesiewjk64.project.dto.PostExpenseDto;
 import com.jakesiewjk64.project.models.Expense;
 import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.repositories.IExpenseRepository;
@@ -85,7 +84,7 @@ public class ExpenseService {
     }
   }
 
-  public Expense postExpense(PostExpenseDto expense) throws Exception {
+  public Expense postExpense(Expense expense) throws Exception {
     try {
       Optional<User> user = userRepository.findById(expense.getUser_id());
 
@@ -96,6 +95,7 @@ public class ExpenseService {
       return expenseRepository
           .save(Expense
               .builder()
+              .id(expense.getId())
               .amount(expense.getAmount())
               .date(expense.getDate())
               .user_id(user.get().getId())

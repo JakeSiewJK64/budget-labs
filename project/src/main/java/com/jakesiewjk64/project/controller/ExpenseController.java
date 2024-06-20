@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jakesiewjk64.project.dto.ExpenseDto;
 import com.jakesiewjk64.project.dto.ExpenseStatsDto;
-import com.jakesiewjk64.project.dto.PostExpenseDto;
 import com.jakesiewjk64.project.models.Expense;
 import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.services.AuthenticationService;
@@ -96,7 +95,7 @@ public class ExpenseController {
   @PostMapping("/expenses")
   public ResponseEntity<Expense> postExpense(
       @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
-      @RequestBody(required = true) PostExpenseDto expense) throws Exception {
+      @RequestBody(required = true) Expense expense) throws Exception {
     User current_user = authenticationService.getCurrentUser(token);
 
     if (current_user.getId() != expense.getUser_id()) {
