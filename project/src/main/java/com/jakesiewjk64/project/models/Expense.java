@@ -1,6 +1,7 @@
 package com.jakesiewjk64.project.models;
 
 import java.util.Date;
+import java.util.UUID;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class Expense {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private String id;
+  private UUID id;
   private double amount;
   private Date date;
   private String description;
