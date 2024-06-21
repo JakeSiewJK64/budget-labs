@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { MdCalendarMonth, MdCheckCircle } from "react-icons/md";
 import { CiCoinInsert } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
-import { DashboardCards } from "@/components/native";
+import { DashboardCards, DateRangePicker } from "@/components/native";
 import { useGetCurrentUser } from "@/hooks/queries/users";
 import {
   useGetAllExpensesById,
@@ -16,7 +16,6 @@ import {
 import { GenericTable } from "@/components/native/GenericTable";
 import { expenseColumns } from "@/lib/columns";
 import { ExpenseModal } from "@/components/native/Expense";
-import DateRangePicker from "@/components/native/DatePickers/DateRangePicker";
 
 const Page = async ({
   searchParams,

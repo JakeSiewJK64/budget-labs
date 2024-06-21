@@ -81,5 +81,3 @@ export const DateRangePicker = () => {
     </div>
   );
 };
-
-export default DateRangePicker;
