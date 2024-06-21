@@ -2,6 +2,7 @@ package com.jakesiewjk64.project.services;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -32,41 +33,73 @@ public class ExpenseService {
   private final IUserRepository userRepository;
   private final ModelMapper modelMapper;
 
-  public ExpenseStatsDto getExpenseStats(int user_id, LocalDate target_date) throws Exception {
+  /**
+   * 
+   * @param user_id
+   * @param target_date
+   * @param recall_month number of months to recall back to generate past reports
+   * @return
+   * @throws Exception
+   */
+  public Map<String, ExpenseStatsDto> getExpenseStats(int user_id, LocalDate start_date, LocalDate end_date)
+      throws Exception {
     try {
-      // query for expenses
-      List<Expense> expenses = expenseRepository.getByYearAndMonth(
-          target_date.getYear(),
-          target_date.getMonthValue(),
-          user_id);
 
-      double total = 0;
-      double current_day_total = 0;
-      double current_month_highest = 0;
-      double current_day_highest = 0;
+      Specification<Expense> specs = Specification.where(null);
+      specs = specs.and(ExpenseSpecification.equalsUserId(user_id));
+      specs = specs.and(ExpenseSpecification.withinDateRange(start_date, end_date));
+
+      // query for expenses
+      List<Expense> expenses = expenseRepository.findAll(specs);
+
+      Map<String, ExpenseStatsDto> expense_stats_map = new HashMap<>();
+
+      int current_month = end_date.getMonthValue();
 
       for (Expense e : expenses) {
-        total += e.getAmount();
+        int month = e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue();
 
-        if (e.getAmount() > current_month_highest) {
-          current_month_highest = e.getAmount();
-        }
+        ExpenseStatsDto stats = expense_stats_map.getOrDefault(String.valueOf(month), ExpenseStatsDto.builder()
+            .current_day_highest(0)
+            .current_day_total(0)
+            .current_month_highest(0)
+            .total_expense(0)
+            .build());
 
-        if (target_date.isEqual(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
-          current_day_total += e.getAmount();
+        double monthly_total = stats.getTotal_expense() + e.getAmount();
+        double current_month_highest = stats.getCurrent_month_highest() < e.getAmount() ? e.getAmount()
+            : stats.getCurrent_month_highest();
 
-          if (e.getAmount() > current_day_highest) {
-            current_day_highest = e.getAmount();
+        if (month == current_month) {
+          double current_day_total = stats.getCurrent_day_total();
+          double current_day_highest = stats.getCurrent_day_highest() < e.getAmount() ? e.getAmount()
+              : stats.getCurrent_day_highest();
+
+          if (start_date.isEqual(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
+            current_day_total += e.getAmount();
+
+            if (current_day_highest < e.getAmount()) {
+              current_day_highest = e.getAmount();
+            }
           }
+
+          expense_stats_map.put(String.valueOf(month), ExpenseStatsDto.builder()
+              .current_day_total(current_day_total)
+              .current_month_highest(current_month_highest)
+              .current_day_highest(current_day_highest)
+              .total_expense(monthly_total)
+              .build());
+        } else {
+          expense_stats_map.put(String.valueOf(month), ExpenseStatsDto.builder()
+              .total_expense(monthly_total)
+              .current_month_highest(current_month_highest)
+              .current_day_highest(0)
+              .current_day_total(0)
+              .build());
         }
       }
 
-      return ExpenseStatsDto.builder()
-          .current_month_highest(current_month_highest)
-          .current_day_highest(current_day_highest)
-          .current_day_total(current_day_total)
-          .total_expense(total)
-          .build();
+      return expense_stats_map;
     } catch (Exception e) {
       throw new Exception("There was a problem generating statistics. If this error persists please contact support.");
     }
