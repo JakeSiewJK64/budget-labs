@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "../LogoutButton";
 
 const Navbar = () => {
   return (
