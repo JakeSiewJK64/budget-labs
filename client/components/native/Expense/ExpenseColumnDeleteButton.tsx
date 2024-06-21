@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useDeleteExpense } from "@/hooks/queries/expenses";
 import { TrashIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const ExpenseColumnDeleteButton = ({
   expense_id,
@@ -11,6 +12,7 @@ export const ExpenseColumnDeleteButton = ({
   expense_id: string;
 }) => {
   const { toast } = useToast();
+  const router = useRouter();
 
   return (
     <form
@@ -24,6 +26,8 @@ export const ExpenseColumnDeleteButton = ({
                 title: "Success",
                 description: "Successfully deleted expense.",
               });
+
+              router.refresh();
             }
           })
           .catch((err) => {
