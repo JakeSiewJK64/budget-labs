@@ -1,3 +1,5 @@
+"use server";
+
 import dayjs from "dayjs";
 import getAxiosInstance from "@/utils/axiosInstance";
 import { z } from "zod";
@@ -56,6 +58,23 @@ export async function useGetExpenseById(args: {
   const axios = getAxiosInstance();
   const res = await axios
     .get("/expenses/getExpenseById", {
+      params: {
+        ...args,
+      },
+    })
+    .catch((err) => {
+      throw new Error(err.response.data.message);
+    });
+
+  return res.data;
+}
+
+export async function useDeleteExpense(args: {
+  expense_id: string;
+}): Promise<string> {
+  const axios = getAxiosInstance();
+  const res = await axios
+    .delete("/expenses", {
       params: {
         ...args,
       },
