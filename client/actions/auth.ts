@@ -46,14 +46,18 @@ export const registerFormAction = async (formData: FormData) => {
 };
 
 export const getIsTokenExpired = async (): Promise<boolean> => {
-  const token = getCookie("token")?.value;
+  try {
+    const token = getCookie("token")?.value;
 
-  if (token) {
-    const axios = getAxiosInstance();
-    const res = await axios
-      .post("/auth/verify", { token: token })
-      .then((res) => res.data);
-    return res;
+    if (token) {
+      const axios = getAxiosInstance();
+      const res = await axios
+        .post("/auth/verify", { token: token })
+        .then((res) => res.data);
+      return res;
+    }
+  } catch (error) {
+    return true;
   }
 
   return true;
