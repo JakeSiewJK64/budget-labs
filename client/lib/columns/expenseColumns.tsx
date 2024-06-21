@@ -1,10 +1,11 @@
 "use client";
 
+import dayjs from "dayjs";
 import { z } from "zod";
 import { ColumnDef } from "@tanstack/react-table";
 import { ExpenseSchema } from "@/types/expense";
 import { buttonVariants } from "@/components/ui/button";
-import dayjs from "dayjs";
+import { ExpenseColumnDeleteButton } from "@/components/native/Expense";
 
 export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
   {
@@ -24,9 +25,12 @@ export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
     header: "",
     accessorKey: "id",
     cell: (info) => (
-      <a className={buttonVariants()} href={`/expenses/${info.getValue()}`}>
-        View Details
-      </a>
+      <div className="flex flex-row gap-1">
+        <a className={buttonVariants()} href={`/expenses/${info.getValue()}`}>
+          View Details
+        </a>
+        <ExpenseColumnDeleteButton expense_id={String(info.getValue())} />
+      </div>
     ),
   },
 ];
