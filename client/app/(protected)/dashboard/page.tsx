@@ -24,9 +24,11 @@ const Page = async ({
 }) => {
   const user = await useGetCurrentUser();
   const paginationInfo = PaginationRequestSchema.parse(searchParams);
+  const currentMonthValue = String(dayjs().month() + 1);
   const stats = await useGetExpenseStatsByUserId({
     user_id: user.id,
-    target_date: dayjs().format("YYYY-MM-DD"),
+    start_date: dayjs().subtract(2, "days").format("YYYY-MM-DD"),
+    end_date: dayjs().format("YYYY-MM-DD"),
   });
   const expenses = await useGetAllExpensesById({
     page: paginationInfo.page,
@@ -50,25 +52,25 @@ const Page = async ({
           {
             color: "#f97316",
             title: "Total spending this month",
-            value: stats.total_expense,
+            value: stats[currentMonthValue].total_expense,
             icon: <FaMoneyBill color="white" />,
           },
           {
             color: "#ef4444",
             title: "Highest spending this month",
-            value: stats.current_month_highest,
+            value: stats[currentMonthValue].current_month_highest,
             icon: <MdCalendarMonth color="white" />,
           },
           {
             color: "#4f46e5",
             title: "Highest spending today",
-            value: stats.current_day_highest,
+            value: stats[currentMonthValue].current_day_highest,
             icon: <CiCoinInsert color="white" />,
           },
           {
             color: "#f1c40f",
             title: "Total spending today",
-            value: stats.current_day_total,
+            value: stats[currentMonthValue].current_day_total,
             icon: <MdCheckCircle color="white" />,
           },
         ]}
