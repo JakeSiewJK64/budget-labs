@@ -24,9 +24,11 @@ import { ExpenseSchema } from "@/types/expense";
 export const ExpenseForm = ({
   userId,
   defaultValues,
+  onSuccessCallback = () => {},
 }: {
   userId: string;
   defaultValues?: z.infer<typeof ExpenseSchema>;
+  onSuccessCallback?: () => void;
 }) => {
   const form = useExpenseForm({ defaultValues: defaultValues });
   const { toast } = useToast();
@@ -42,11 +44,7 @@ export const ExpenseForm = ({
 
         submitExpenseAction(formValues).then((res) => {
           if (res.status === 200) {
-            toast({
-              title: "Success",
-              description: "Successfully saved expense",
-            });
-            document.getElementById("toggleExpenseModal")?.click();
+            onSuccessCallback();
           } else {
             toast({
               title: "Error",
