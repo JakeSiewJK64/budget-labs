@@ -42,16 +42,18 @@ export const ExpenseForm = ({
           ...(userId && { user_id: userId }),
         };
 
-        submitExpenseAction(formValues).then((res) => {
-          if (res.status === 200) {
-            onSuccessCallback();
-          } else {
+        submitExpenseAction(formValues)
+          .then((res) => {
+            if (res.status === 200) {
+              onSuccessCallback();
+            }
+          })
+          .catch((err) => {
             toast({
               title: "Error",
-              description: String(res.data),
+              description: err.data.message,
             });
-          }
-        });
+          });
       })}
     >
       <Form {...form}>
