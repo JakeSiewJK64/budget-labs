@@ -1,5 +1,5 @@
-import { ExpenseForm } from "@/components/form";
 import { CopyClipboardButton } from "@/components/native/CopyClipboardButton";
+import { ExpenseEditSection } from "@/components/native/Expense";
 import { useGetExpenseById } from "@/hooks/queries";
 import { useGetCurrentUser } from "@/hooks/queries/users";
 
@@ -12,13 +12,13 @@ const Page = async ({ params }: { params: { expenseId: string } }) => {
 
   return (
     <div className="m-2">
-      <div className="flex flex-row gap-1 items-baseline">
+      <div className="flex flex-row gap-4 items-baseline">
         <h1 className="scroll-m-20 text-2xl font-bold tracking-tight">
           Expense ID: {params.expenseId}
         </h1>
         <CopyClipboardButton text={params.expenseId} />
       </div>
-      <ExpenseForm userId={String(user.id)} defaultValues={expense} />
+      <ExpenseEditSection defaultValues={expense} userId={String(user.id)} />
     </div>
   );
 };
