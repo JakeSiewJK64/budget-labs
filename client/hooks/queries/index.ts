@@ -1,4 +1,4 @@
-import { useGetAllUsers } from "./users";
+import { useGetAllUsers, useGetCurrentUser } from "./users";
 import {
   useGetAllExpensesById,
   useGetExpenseById,
@@ -6,6 +6,7 @@ import {
 } from "./expenses";
 
 export {
+  useGetCurrentUser,
   useGetAllUsers,
   useGetAllExpensesById,
   useGetExpenseById,
