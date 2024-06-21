@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { ExpenseForm } from "@/components/form/ExpenseForm";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,8 +11,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useToast } from "@/components/ui/use-toast";
 
 const ExpenseModal = ({ userId }: { userId: string }) => {
+  const { toast } = useToast();
+  const router = useRouter();
+  const onSuccessCallback = () => {
+    toast({
+      title: "Success",
+      description: "Successfully saved expense",
+    });
+
+    document.getElementById("toggleExpenseModal")?.click();
+    router.refresh();
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -25,7 +39,7 @@ const ExpenseModal = ({ userId }: { userId: string }) => {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <ExpenseForm userId={userId} />
+          <ExpenseForm userId={userId} onSuccessCallback={onSuccessCallback} />
         </div>
       </DialogContent>
     </Dialog>
