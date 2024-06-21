@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 
-const ExpenseModal = ({ userId }: { userId: string }) => {
+export const ExpenseModal = ({ userId }: { userId: string }) => {
   const { toast } = useToast();
   const router = useRouter();
   const onSuccessCallback = () => {
@@ -45,5 +45,3 @@ const ExpenseModal = ({ userId }: { userId: string }) => {
     </Dialog>
   );
 };
-
-export default ExpenseModal;
