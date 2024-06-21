@@ -10,8 +10,9 @@ const ExpenseResponseSchema = PaginatedResponseSchema(ExpenseSchema);
 
 export async function useGetExpenseStatsByUserId(args: {
   user_id: number;
-  target_date: string;
-}): Promise<z.infer<typeof ExpenseStatsSchema>> {
+  start_date: string;
+  end_date: string;
+}): Promise<Record<string, z.infer<typeof ExpenseStatsSchema>>> {
   const axios = getAxiosInstance();
   const res = await axios
     .get("/expenses/getExpenseStatsByUserId", {
@@ -21,7 +22,7 @@ export async function useGetExpenseStatsByUserId(args: {
       throw new Error(err.response.data.message);
     });
 
-  return ExpenseStatsSchema.parseAsync(res.data);
+  return res.data;
 }
 
 export async function useGetAllExpensesById(args: {
