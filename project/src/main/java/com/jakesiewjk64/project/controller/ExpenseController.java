@@ -36,9 +36,10 @@ public class ExpenseController {
   private final AuthenticationService authenticationService;
 
   @GetMapping("/expenses/getExpenseStatsByUserId")
-  public ResponseEntity<ExpenseStatsDto> getExpenseStatsByUserId(
+  public ResponseEntity<Map<String, ExpenseStatsDto>> getExpenseStatsByUserId(
       @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
-      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam(required = false) LocalDate target_date,
+      @RequestParam(required = false) LocalDate start_date,
+      @RequestParam(required = false) LocalDate end_date,
       @RequestParam(required = true) int user_id) throws Exception {
 
     User current_user = authenticationService.getCurrentUser(token);
@@ -48,7 +49,7 @@ public class ExpenseController {
     }
 
     return ResponseEntity.ok(
-        expenseService.getExpenseStats(user_id, target_date));
+        expenseService.getExpenseStats(user_id, start_date, end_date));
   }
 
   @GetMapping("/expenses")
