@@ -28,8 +28,14 @@ const Page = async ({
   const currentMonthValue = String(dayjs().month() + 1);
   const stats = await useGetExpenseStatsByUserId({
     user_id: user.id,
-    start_date: dayjs().subtract(2, "days").format("YYYY-MM-DD"),
-    end_date: dayjs().format("YYYY-MM-DD"),
+    start_date: (searchParams.start_date
+      ? dayjs(searchParams.start_date)
+      : dayjs().startOf("month")
+    ).format("YYYY-MM-DD"),
+    end_date: (searchParams.end_date
+      ? dayjs(searchParams.end_date)
+      : dayjs().endOf("month")
+    ).format("YYYY-MM-DD"),
   });
   const expenses = await useGetAllExpensesById({
     page: paginationInfo.page,
