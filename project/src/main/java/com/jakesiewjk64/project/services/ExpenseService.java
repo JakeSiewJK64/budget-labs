@@ -1,8 +1,10 @@
 package com.jakesiewjk64.project.services;
 
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +31,7 @@ import com.jakesiewjk64.project.repositories.IExpenseRepository;
 import com.jakesiewjk64.project.repositories.IUserRepository;
 import com.jakesiewjk64.project.specifications.ExpenseSpecification;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -64,6 +69,40 @@ public class ExpenseService {
       return expenseStatsMap;
     } catch (Exception e) {
       throw new Exception("There was a problem generating statistics. If this error persists please contact support.");
+    }
+  }
+
+  public void exportExpenseToCSV(int userId, LocalDate startDate, LocalDate endDate, HttpServletResponse response)
+      throws Exception {
+    try {
+      PrintWriter writer = response.getWriter();
+      // initialize csv writer
+      CSVPrinter csvPrinter = new CSVPrinter(writer, CSVFormat.RFC4180);
+      csvPrinter.printRecord("ID", "Description", "Amount", "Date");
+
+      // fetch for expenses
+      Specification<Expense> specs = Specification.where(null);
+      specs = specs.and(ExpenseSpecification.equalsUserId(Integer.valueOf(userId)));
+      specs = specs.and(ExpenseSpecification.withinDateRange(startDate, endDate));
+
+      List<Expense> expenseList = expenseRepository.findAll(specs);
+
+      // iterate and append expense into csv
+      for (Expense e : expenseList) {
+        List<String> data = Arrays.asList(
+            e.getId().toString(),
+            e.getDescription(),
+            String.valueOf(e.getAmount()),
+            String.valueOf(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
+        csvPrinter.printRecord(data);
+      }
+
+      csvPrinter.flush();
+      writer.flush();
+      csvPrinter.close();
+      writer.close();
+    } catch (Exception e) {
+      throw e;
     }
   }
 

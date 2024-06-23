@@ -1,6 +1,9 @@
 package com.jakesiewjk64.project.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,7 @@ import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.services.AuthenticationService;
 import com.jakesiewjk64.project.services.ExpenseService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/api/v1")
@@ -34,6 +38,29 @@ import lombok.RequiredArgsConstructor;
 public class ExpenseController {
   private final ExpenseService expenseService;
   private final AuthenticationService authenticationService;
+
+  @GetMapping("/expenses/exportExpenseToCSV")
+  public void exportExpenseToCSV(
+      HttpServletResponse response,
+      @RequestHeader(required = false, value = HttpHeaders.AUTHORIZATION) String token,
+      @RequestParam(required = true) int user_id,
+      @RequestParam(required = false) LocalDate start_date,
+      @RequestParam(required = false) LocalDate end_date) throws Exception {
+
+    User current_user = authenticationService.getCurrentUser(token);
+
+    if (current_user.getId() != user_id) {
+      throw new Exception("You are not authorized to view expense for this user.");
+    }
+
+    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    String headerKey = "Content-Disposition";
+    String headerValue = "attachment; filename=expense_" + dateFormat.format(new Date()) + ".csv";
+    response.setContentType("application/octet-stream");
+    response.setHeader(headerKey, headerValue);
+
+    expenseService.exportExpenseToCSV(user_id, start_date, end_date, response);
+  }
 
   @GetMapping("/expenses/getExpenseStatsByUserId")
   public ResponseEntity<Map<String, ExpenseStatsDto>> getExpenseStatsByUserId(
