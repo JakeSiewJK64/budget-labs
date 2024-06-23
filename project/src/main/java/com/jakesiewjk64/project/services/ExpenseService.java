@@ -55,7 +55,7 @@ public class ExpenseService {
       Map<String, ExpenseStatsDto> expenseStatsMap = expenses.stream()
           .collect(Collectors.toMap(
               e -> String.valueOf(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue()),
-              e -> createExpenseStatsDto(e, startDate),
+              e -> createExpenseStatsDto(e),
               this::mergeExpenseStats));
 
       return expenseStatsMap;
@@ -140,7 +140,7 @@ public class ExpenseService {
         .build();
   }
 
-  private ExpenseStatsDto createExpenseStatsDto(Expense expense, LocalDate startDate) {
+  private ExpenseStatsDto createExpenseStatsDto(Expense expense) {
     LocalDate systemCurrentDate = LocalDate.now();
     LocalDate expenseDate = expense.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     int currentMonth = systemCurrentDate.getMonthValue();
