@@ -11,18 +11,22 @@ import {
   YAxis,
 } from "recharts";
 
-export const MonthlyExpenseLineChart = ({
+export const GenericLineChart = ({
   data,
   height,
   width,
+  title,
 }: {
+  title: string;
   width: string | number;
   height: string | number;
   data: { name: string; value: number }[];
 }) => {
   return (
     <div className="p-2">
-      <h2 className="pb-2 text-3xl font-semibold tracking-tight first:mt-0">Gross Monthly Expense</h2>
+      <h2 className="pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+        {title}
+      </h2>
       <ResponsiveContainer width={width} height={height}>
         <LineChart
           width={500}

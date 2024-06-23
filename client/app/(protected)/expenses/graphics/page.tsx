@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { useGetCurrentUser, useGetExpenseStatsByUserId } from "@/hooks/queries";
-import { MonthlyExpenseLineChart } from "@/components/charts";
+import { GenericLineChart } from "@/components/charts";
 import { DateRangeURLParam } from "@/types/global";
 import { MONTHS_MAPPING } from "@/utils/json";
 
@@ -30,7 +30,8 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
 
   return (
     <>
-      <MonthlyExpenseLineChart
+      <GenericLineChart
+        title="Gross Monthly Expense"
         data={monthlyGrossExpenseStats}
         width="100%"
         height={350}

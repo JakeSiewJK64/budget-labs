@@ -1,3 +1,3 @@
-import { MonthlyExpenseLineChart } from "./expense/ExpenseLineChart";
+import { GenericLineChart } from "./expense/GenericLineChart";
 
-export { MonthlyExpenseLineChart };
+export { GenericLineChart };
