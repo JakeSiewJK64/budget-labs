@@ -57,8 +57,9 @@ export const GenericLineChart = ({
           <YAxis />
           <Tooltip />
           <Legend />
-          {dataLines.map((dataLine) => (
+          {dataLines.map((dataLine, i) => (
             <Line
+              key={`${dataLine.dataKey}-${i}`}
               type={dataLine.type ?? "monotone"}
               dataKey={dataLine.dataKey}
               stroke={dataLine.color ?? "#82ca9d"}

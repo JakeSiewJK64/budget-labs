@@ -15,7 +15,7 @@ const SideMenu = ({
   return (
     <Card className="flex flex-col">
       {routes.map((route) => (
-        <Link href={route.path}>
+        <Link href={route.path} key={route.path}>
           <div
             className={cn(
               pathname === route.path && "bg-slate-50 border-l-2 border-black",
