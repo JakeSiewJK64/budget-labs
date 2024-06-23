@@ -24,6 +24,13 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
   const monthlyGrossExpenseStats = Object.keys(stats).map((key) => {
     return {
       name: MONTHS_MAPPING[parseInt(key) - 1],
+      value: stats[key].total_expense,
+    };
+  });
+
+  const HighestMonthlyExpense = Object.keys(stats).map((key) => {
+    return {
+      name: MONTHS_MAPPING[parseInt(key) - 1],
       value: stats[key].current_month_highest,
     };
   });
@@ -31,8 +38,16 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
   return (
     <>
       <GenericLineChart
+        description="Total expenditure on that month."
         title="Gross Monthly Expense"
         data={monthlyGrossExpenseStats}
+        width="100%"
+        height={350}
+      />
+      <GenericLineChart
+        description="Highest expenditure on that month."
+        title="Highest Monthly Expense"
+        data={HighestMonthlyExpense}
         width="100%"
         height={350}
       />
