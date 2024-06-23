@@ -12,7 +12,7 @@ export async function useGetExpenseStatsByUserId(args: {
   user_id: number;
   start_date: string;
   end_date: string;
-}): Promise<Record<string, z.infer<typeof ExpenseStatsSchema>>> {
+}): Promise<Record<string, ExpenseStatsSchema>> {
   const axios = getAxiosInstance();
   const res = await axios
     .get("/expenses/getExpenseStatsByUserId", {

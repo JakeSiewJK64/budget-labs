@@ -18,9 +18,10 @@ export const ExpenseSchema = z.object({
     }),
 });
 
-export const ExpenseStatsSchema = z.object({
-  total_expense: z.number(),
-  current_month_highest: z.number(),
-  current_day_highest: z.number(),
-  current_day_total: z.number(),
-});
+export type ExpenseStatsSchema = {
+  total_expense: number;
+  current_month_highest: number;
+  current_day_highest: number;
+  current_day_total: number;
+  expense_arr: z.infer<typeof ExpenseSchema>[];
+};
