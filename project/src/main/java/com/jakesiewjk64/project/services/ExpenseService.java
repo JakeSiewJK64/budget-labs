@@ -2,6 +2,7 @@ package com.jakesiewjk64.project.services;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -132,11 +133,16 @@ public class ExpenseService {
   }
 
   private ExpenseStatsDto mergeExpenseStats(ExpenseStatsDto dto1, ExpenseStatsDto dto2) {
+
+    List<Expense> expense_arr = new ArrayList<>(dto1.getExpense_arr());
+    expense_arr.addAll(dto2.getExpense_arr());
+
     return ExpenseStatsDto.builder()
         .total_expense(dto1.getTotal_expense() + dto2.getTotal_expense())
         .current_month_highest(Math.max(dto1.getCurrent_month_highest(), dto2.getCurrent_month_highest()))
         .current_day_total(dto1.getCurrent_day_total() + dto2.getCurrent_day_total())
         .current_day_highest(Math.max(dto1.getCurrent_day_highest(), dto2.getCurrent_day_highest()))
+        .expense_arr(expense_arr)
         .build();
   }
 
@@ -146,16 +152,25 @@ public class ExpenseService {
     int currentMonth = systemCurrentDate.getMonthValue();
     int month = expenseDate.getMonthValue();
 
+    List<Expense> expenseList = new ArrayList<>();
+
     ExpenseStatsDto.ExpenseStatsDtoBuilder builder = ExpenseStatsDto.builder()
         .total_expense(expense.getAmount())
         .current_month_highest(expense.getAmount());
 
-    if (month == currentMonth && expenseDate.isEqual(systemCurrentDate)) {
-      builder.current_day_total(expense.getAmount())
-          .current_day_highest(expense.getAmount());
+    if (month == currentMonth) {
+      expenseList.add(expense);
+
+      if (expenseDate.isEqual(systemCurrentDate)) {
+        builder.current_day_total(expense.getAmount())
+            .current_day_highest(expense.getAmount());
+      }
+
+      builder.expense_arr(expenseList);
     } else {
       builder.current_day_total(0)
-          .current_day_highest(0);
+          .current_day_highest(0)
+          .expense_arr(expenseList);
     }
 
     return builder.build();
