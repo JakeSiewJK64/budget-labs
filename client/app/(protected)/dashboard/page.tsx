@@ -15,8 +15,10 @@ import {
 import { expenseColumns } from "@/lib/columns";
 import { DateRangePicker } from "@/components/native";
 import { GenericTable } from "@/components/native/GenericTable";
-import { ExpenseModal } from "@/components/native/Expense";
+import { ExpenseModal, ExportExpenseButton } from "@/components/native/Expense";
 import { DashboardCards } from "@/components/native/Dashboard";
+import { Button } from "@/components/ui/button";
+import { Download } from "lucide-react";
 
 const Page = async ({
   searchParams,
@@ -26,16 +28,20 @@ const Page = async ({
   const user = await useGetCurrentUser();
   const paginationInfo = PaginationRequestSchema.parse(searchParams);
   const currentMonthValue = String(dayjs().month() + 1);
-  const stats = await useGetExpenseStatsByUserId({
-    user_id: user.id,
-    start_date: (searchParams.start_date
+  const startDate = (
+    searchParams.start_date
       ? dayjs(searchParams.start_date)
       : dayjs().startOf("month")
-    ).format("YYYY-MM-DD"),
-    end_date: (searchParams.end_date
+  ).format("YYYY-MM-DD");
+  const endDate = (
+    searchParams.end_date
       ? dayjs(searchParams.end_date)
       : dayjs().endOf("month")
-    ).format("YYYY-MM-DD"),
+  ).format("YYYY-MM-DD");
+  const stats = await useGetExpenseStatsByUserId({
+    user_id: user.id,
+    start_date: startDate,
+    end_date: endDate,
   });
   const expenses = await useGetAllExpensesById({
     page: paginationInfo.page,
@@ -82,7 +88,12 @@ const Page = async ({
           },
         ]}
       />
-      <div className="ml-auto">
+      <div className="ml-auto flex flex-row align-baseline gap-2">
+        <ExportExpenseButton
+          end_date={endDate}
+          start_date={startDate}
+          user_id={String(user.id)}
+        />
         <ExpenseModal userId={String(user.id)} />
       </div>
       <GenericTable
