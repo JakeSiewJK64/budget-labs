@@ -1,3 +1,3 @@
-import { GenericLineChart } from "./expense/GenericLineChart";
+import { GenericLineChart } from "./GenericLineChart";
 
 export { GenericLineChart };
