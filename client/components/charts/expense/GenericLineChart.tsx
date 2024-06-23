@@ -16,7 +16,9 @@ export const GenericLineChart = ({
   height,
   width,
   title,
+  description,
 }: {
+  description?: string;
   title: string;
   width: string | number;
   height: string | number;
@@ -24,9 +26,12 @@ export const GenericLineChart = ({
 }) => {
   return (
     <div className="p-2">
-      <h2 className="pb-2 text-3xl font-semibold tracking-tight first:mt-0">
-        {title}
-      </h2>
+      <div className="pb-4">
+        <h2 className="text-3xl font-semibold tracking-tight first:mt-0">
+          {title}
+        </h2>
+        {description && <p className="text-slate-400">{description}</p>}
+      </div>
       <ResponsiveContainer width={width} height={height}>
         <LineChart
           width={500}
