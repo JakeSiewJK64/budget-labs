@@ -2,16 +2,17 @@ package com.jakesiewjk64.project.services;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -41,65 +42,23 @@ public class ExpenseService {
    * @return
    * @throws Exception
    */
-  public Map<String, ExpenseStatsDto> getExpenseStats(int user_id, LocalDate start_date, LocalDate end_date)
+  public Map<String, ExpenseStatsDto> getExpenseStats(int userId, LocalDate startDate, LocalDate endDate)
       throws Exception {
     try {
+      Specification<Expense> specs = Specification.where(ExpenseSpecification.equalsUserId(userId))
+          .and(ExpenseSpecification.withinDateRange(startDate, endDate));
 
-      Specification<Expense> specs = Specification.where(null);
-      specs = specs.and(ExpenseSpecification.equalsUserId(user_id));
-      specs = specs.and(ExpenseSpecification.withinDateRange(start_date, end_date));
+      // Query for expenses
+      List<Expense> expenses = expenseRepository.findAll(specs, Sort.by(Sort.Direction.ASC, "date"));
 
-      // query for expenses
-      List<Expense> expenses = expenseRepository.findAll(specs);
+      // Create and process expenses map
+      Map<String, ExpenseStatsDto> expenseStatsMap = expenses.stream()
+          .collect(Collectors.toMap(
+              e -> String.valueOf(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue()),
+              e -> createExpenseStatsDto(e, startDate),
+              this::mergeExpenseStats));
 
-      Map<String, ExpenseStatsDto> expense_stats_map = new HashMap<>();
-
-      int current_month = end_date.getMonthValue();
-
-      for (Expense e : expenses) {
-        int month = e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().getMonthValue();
-
-        ExpenseStatsDto stats = expense_stats_map.getOrDefault(String.valueOf(month), ExpenseStatsDto.builder()
-            .current_day_highest(0)
-            .current_day_total(0)
-            .current_month_highest(0)
-            .total_expense(0)
-            .build());
-
-        double monthly_total = stats.getTotal_expense() + e.getAmount();
-        double current_month_highest = stats.getCurrent_month_highest() < e.getAmount() ? e.getAmount()
-            : stats.getCurrent_month_highest();
-
-        if (month == current_month) {
-          double current_day_total = stats.getCurrent_day_total();
-          double current_day_highest = stats.getCurrent_day_highest() < e.getAmount() ? e.getAmount()
-              : stats.getCurrent_day_highest();
-
-          if (start_date.isEqual(e.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate())) {
-            current_day_total += e.getAmount();
-
-            if (current_day_highest < e.getAmount()) {
-              current_day_highest = e.getAmount();
-            }
-          }
-
-          expense_stats_map.put(String.valueOf(month), ExpenseStatsDto.builder()
-              .current_day_total(current_day_total)
-              .current_month_highest(current_month_highest)
-              .current_day_highest(current_day_highest)
-              .total_expense(monthly_total)
-              .build());
-        } else {
-          expense_stats_map.put(String.valueOf(month), ExpenseStatsDto.builder()
-              .total_expense(monthly_total)
-              .current_month_highest(current_month_highest)
-              .current_day_highest(0)
-              .current_day_total(0)
-              .build());
-        }
-      }
-
-      return expense_stats_map;
+      return expenseStatsMap;
     } catch (Exception e) {
       throw new Exception("There was a problem generating statistics. If this error persists please contact support.");
     }
@@ -170,5 +129,35 @@ public class ExpenseService {
     } catch (Exception e) {
       throw new Exception("There was a problem getting the expense. If this error persists please contact support.");
     }
+  }
+
+  private ExpenseStatsDto mergeExpenseStats(ExpenseStatsDto dto1, ExpenseStatsDto dto2) {
+    return ExpenseStatsDto.builder()
+        .total_expense(dto1.getTotal_expense() + dto2.getTotal_expense())
+        .current_month_highest(Math.max(dto1.getCurrent_month_highest(), dto2.getCurrent_month_highest()))
+        .current_day_total(dto1.getCurrent_day_total() + dto2.getCurrent_day_total())
+        .current_day_highest(Math.max(dto1.getCurrent_day_highest(), dto2.getCurrent_day_highest()))
+        .build();
+  }
+
+  private ExpenseStatsDto createExpenseStatsDto(Expense expense, LocalDate startDate) {
+    LocalDate systemCurrentDate = LocalDate.now();
+    LocalDate expenseDate = expense.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    int currentMonth = systemCurrentDate.getMonthValue();
+    int month = expenseDate.getMonthValue();
+
+    ExpenseStatsDto.ExpenseStatsDtoBuilder builder = ExpenseStatsDto.builder()
+        .total_expense(expense.getAmount())
+        .current_month_highest(expense.getAmount());
+
+    if (month == currentMonth && expenseDate.isEqual(systemCurrentDate)) {
+      builder.current_day_total(expense.getAmount())
+          .current_day_highest(expense.getAmount());
+    } else {
+      builder.current_day_total(0)
+          .current_day_highest(0);
+    }
+
+    return builder.build();
   }
 }
