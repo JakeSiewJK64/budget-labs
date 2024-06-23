@@ -6,6 +6,7 @@ import { MONTHS_MAPPING } from "@/utils/json";
 
 const threeMonthsPrior = dayjs().subtract(3, "months");
 const endOfMonth = dayjs().endOf("month");
+const currentMonth = dayjs().get("month") + 1;
 
 const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
   const user = await useGetCurrentUser();
@@ -20,6 +21,11 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
       : endOfMonth
     ).format("YYYY-MM-DD"),
   });
+
+  const currentDayExpenses = stats[currentMonth].expense_arr.map((expense) => ({
+    name: dayjs(expense.date).format('YYYY-MM-DD'),
+    value: expense.amount,
+  }));
 
   const monthlyGrossExpenseStats = Object.keys(stats).map((key) => {
     return {
@@ -48,6 +54,13 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
         description="Highest expenditure on that month."
         title="Highest Monthly Expense"
         data={HighestMonthlyExpense}
+        width="100%"
+        height={350}
+      />
+      <GenericLineChart
+        description="Expense trend for current month."
+        title="Expense Trend"
+        data={currentDayExpenses}
         width="100%"
         height={350}
       />
