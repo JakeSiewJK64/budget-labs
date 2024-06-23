@@ -3,6 +3,7 @@ package com.jakesiewjk64.project.services;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import com.jakesiewjk64.project.dto.ExpenseDto;
 import com.jakesiewjk64.project.dto.ExpenseStatsDto;
+import com.jakesiewjk64.project.dto.TinyExpenseDto;
 import com.jakesiewjk64.project.models.Expense;
 import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.repositories.IExpenseRepository;
@@ -134,15 +136,29 @@ public class ExpenseService {
 
   private ExpenseStatsDto mergeExpenseStats(ExpenseStatsDto dto1, ExpenseStatsDto dto2) {
 
-    List<Expense> expense_arr = new ArrayList<>(dto1.getExpense_arr());
-    expense_arr.addAll(dto2.getExpense_arr());
+    List<TinyExpenseDto> expenseArr = new ArrayList<>(dto1.getExpense_arr());
+    expenseArr.addAll(dto2.getExpense_arr());
+
+    List<TinyExpenseDto> finalExpenseArr = expenseArr
+        .stream()
+        .collect(
+            Collectors.groupingBy(
+                TinyExpenseDto::getDate, // group by date
+                Collectors.summingDouble(TinyExpenseDto::getAmount)))
+        .entrySet()
+        .stream()
+        .map(e -> TinyExpenseDto.builder()
+            .date(e.getKey())
+            .amount(e.getValue()).build())
+        .sorted(Comparator.comparing(TinyExpenseDto::getDate))
+        .collect(Collectors.toList());
 
     return ExpenseStatsDto.builder()
         .total_expense(dto1.getTotal_expense() + dto2.getTotal_expense())
         .current_month_highest(Math.max(dto1.getCurrent_month_highest(), dto2.getCurrent_month_highest()))
         .current_day_total(dto1.getCurrent_day_total() + dto2.getCurrent_day_total())
         .current_day_highest(Math.max(dto1.getCurrent_day_highest(), dto2.getCurrent_day_highest()))
-        .expense_arr(expense_arr)
+        .expense_arr(finalExpenseArr)
         .build();
   }
 
@@ -152,14 +168,17 @@ public class ExpenseService {
     int currentMonth = systemCurrentDate.getMonthValue();
     int month = expenseDate.getMonthValue();
 
-    List<Expense> expenseList = new ArrayList<>();
+    List<TinyExpenseDto> expenseList = new ArrayList<>();
 
     ExpenseStatsDto.ExpenseStatsDtoBuilder builder = ExpenseStatsDto.builder()
         .total_expense(expense.getAmount())
         .current_month_highest(expense.getAmount());
 
     if (month == currentMonth) {
-      expenseList.add(expense);
+      expenseList.add(TinyExpenseDto.builder()
+          .date(expenseDate)
+          .amount(expense.getAmount())
+          .build());
 
       if (expenseDate.isEqual(systemCurrentDate)) {
         builder.current_day_total(expense.getAmount())
