@@ -25,3 +25,20 @@ export async function submitExpenseAction(
 
   return { data: res.data, status: res.status };
 }
+
+export async function exportExpenseToCSV(args: {
+  start_date: string;
+  end_date: string;
+  user_id: string;
+}) {
+  const axios = getAxiosInstance();
+  const res = await axios
+    .get("/expenses/exportExpenseToCSV", {
+      params: args,
+    })
+    .catch((err) => {
+      const errorMessage = err.response.data.message;
+      return { data: errorMessage, status: 403 };
+    });
+  return res.data;
+}

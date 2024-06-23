@@ -1,5 +1,11 @@
-import { ExpenseColumnDeleteButton } from "./ExpenseColumnDeleteButton";
+import { ExpenseColumnDeleteButton } from "./buttons/ExpenseColumnDeleteButton";
+import { ExportExpenseButton } from "./buttons/ExportExpenseButton";
 import { ExpenseEditSection } from "./ExpenseEditSection";
 import { ExpenseModal } from "./ExpenseModal";
 
-export { ExpenseModal, ExpenseColumnDeleteButton, ExpenseEditSection };
+export {
+  ExpenseModal,
+  ExpenseColumnDeleteButton,
+  ExportExpenseButton,
+  ExpenseEditSection,
+};
