@@ -167,29 +167,26 @@ public class ExpenseService {
     LocalDate expenseDate = expense.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     int currentMonth = systemCurrentDate.getMonthValue();
     int month = expenseDate.getMonthValue();
-
-    List<TinyExpenseDto> expenseList = new ArrayList<>();
-
+    List<TinyExpenseDto> expenseList = List.of(
+        TinyExpenseDto.builder()
+            .date(expenseDate)
+            .amount(expense.getAmount())
+            .build());
     ExpenseStatsDto.ExpenseStatsDtoBuilder builder = ExpenseStatsDto.builder()
         .total_expense(expense.getAmount())
-        .current_month_highest(expense.getAmount());
+        .current_month_highest(expense.getAmount())
+        .expense_arr(expenseList);
 
     if (month == currentMonth) {
-      expenseList.add(TinyExpenseDto.builder()
-          .date(expenseDate)
-          .amount(expense.getAmount())
-          .build());
 
       if (expenseDate.isEqual(systemCurrentDate)) {
         builder.current_day_total(expense.getAmount())
             .current_day_highest(expense.getAmount());
       }
 
-      builder.expense_arr(expenseList);
     } else {
       builder.current_day_total(0)
-          .current_day_highest(0)
-          .expense_arr(expenseList);
+          .current_day_highest(0);
     }
 
     return builder.build();
