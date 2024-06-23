@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 
 const routes = [
   { path: "/dashboard", label: "Dashboard" },
+  { path: "/expenses/graphics", label: "Expense Statistics" },
   { path: "/users", label: "Users" },
 ];
 
