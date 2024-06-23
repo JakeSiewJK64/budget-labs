@@ -17,7 +17,7 @@ const ProtectedLayout = ({
       <Toaster />
       <Navbar />
       <div className="flex justify-center">
-        <div className="lg:flex lg:flex-row lg:gap-2 sm:grid sm:grid-cols-1">
+        <div className="lg:flex lg:flex-row gap-2 sm:grid sm:grid-cols-1">
           <div className="max-w-[100%]">
             <SideMenu routes={routes} />
           </div>
