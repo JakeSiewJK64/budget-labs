@@ -10,11 +10,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { CurveType } from "recharts/types/shape/Curve";
 
 export const GenericLineChart = ({
   data,
   height,
   width,
+  dataLines,
   title,
   description,
 }: {
@@ -23,6 +25,12 @@ export const GenericLineChart = ({
   width: string | number;
   height: string | number;
   data: { name: string; value: number }[];
+  dataLines: {
+    type?: CurveType;
+    dataKey: string;
+    color?: string;
+    label?: string;
+  }[];
 }) => {
   return (
     <div className="p-2">
@@ -49,7 +57,14 @@ export const GenericLineChart = ({
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="value" stroke="#82ca9d" name="Value" />
+          {dataLines.map((dataLine) => (
+            <Line
+              type={dataLine.type ?? "monotone"}
+              dataKey={dataLine.dataKey}
+              stroke={dataLine.color ?? "#82ca9d"}
+              name={dataLine.label ?? "Value"}
+            />
+          ))}
         </LineChart>
       </ResponsiveContainer>
     </div>

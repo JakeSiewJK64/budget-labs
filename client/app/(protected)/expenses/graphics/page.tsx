@@ -23,7 +23,7 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
   });
 
   const currentDayExpenses = stats[currentMonth].expense_arr.map((expense) => ({
-    name: dayjs(expense.date).format('YYYY-MM-DD'),
+    name: dayjs(expense.date).format("YYYY-MM-DD"),
     value: expense.amount,
   }));
 
@@ -49,6 +49,11 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
         data={monthlyGrossExpenseStats}
         width="100%"
         height={350}
+        dataLines={[
+          {
+            dataKey: "value",
+          },
+        ]}
       />
       <GenericLineChart
         description="Highest expenditure on that month."
@@ -56,6 +61,11 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
         data={HighestMonthlyExpense}
         width="100%"
         height={350}
+        dataLines={[
+          {
+            dataKey: "value",
+          },
+        ]}
       />
       <GenericLineChart
         description="Expense trend for current month."
@@ -63,6 +73,12 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
         data={currentDayExpenses}
         width="100%"
         height={350}
+        dataLines={[
+          {
+            dataKey: "value",
+            label: "(MYR) Amount",
+          },
+        ]}
       />
     </>
   );
