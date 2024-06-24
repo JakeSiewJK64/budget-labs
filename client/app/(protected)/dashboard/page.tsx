@@ -65,33 +65,34 @@ const Page = async ({
           {
             color: "#f97316",
             title: "Total spending this month",
-            value: stats[currentMonthValue].total_expense,
+            value: stats[currentMonthValue]?.total_expense ?? 0,
             icon: <FaMoneyBill color="white" />,
           },
           {
             color: "#ef4444",
             title: "Highest spending this month",
-            value: stats[currentMonthValue].current_month_highest,
+            value: stats[currentMonthValue]?.current_month_highest ?? 0,
             icon: <MdCalendarMonth color="white" />,
           },
           {
             color: "#4f46e5",
             title: "Highest spending today",
-            value: stats[currentMonthValue].current_day_highest,
+            value: stats[currentMonthValue]?.current_day_highest ?? 0,
             icon: <CiCoinInsert color="white" />,
           },
           {
             color: "#f1c40f",
             title: "Total spending today",
-            value: stats[currentMonthValue].current_day_total,
+            value: stats[currentMonthValue]?.current_day_total ?? 0,
             icon: <MdCheckCircle color="white" />,
           },
           {
             color: "#f1c4ff",
             title: "Average spending this month",
-            value:
-              stats[currentMonthValue].total_expense /
-              stats[currentMonthValue].expense_arr.length,
+            value: !stats[currentMonthValue]
+              ? 0
+              : stats[currentMonthValue].total_expense /
+                stats[currentMonthValue].expense_arr.length,
             icon: <MdMoneyOff color="white" />,
           },
         ]}
