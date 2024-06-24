@@ -26,8 +26,8 @@ public class AuthenticationService {
 
   public User getCurrentUser(String token) throws Exception {
     String jwt = token.substring(7);
-    String email = jwtService.extractUsername(jwt);
-    User user = userService.findUserByEmail(email).orElseThrow();
+    String id = jwtService.extractSubject(jwt);
+    User user = userService.findUserById(Integer.parseInt(id)).orElseThrow();
 
     return user;
   }

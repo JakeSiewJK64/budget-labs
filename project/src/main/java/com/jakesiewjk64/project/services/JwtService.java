@@ -5,8 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.jakesiewjk64.project.models.User;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -19,7 +20,7 @@ public class JwtService {
 
   private static final String SECRET = "t5nPibbIYj8U7Cucj2kAnRkbiNHx6wzRau3faL_Jav8";
 
-  public String extractUsername(String token) {
+  public String extractSubject(String token) {
     return extractClaim(token, Claims::getSubject);
   }
 
@@ -40,17 +41,17 @@ public class JwtService {
     }
   }
 
-  public String generateToken(UserDetails userDetails) {
-    return generateToken(new HashMap<>(), userDetails);
+  public String generateToken(User user) {
+    return generateToken(new HashMap<>(), user);
   }
 
   public String generateToken(
       Map<String, Object> extraClaims,
-      UserDetails userDetails) {
+      User user) {
     return Jwts
         .builder()
         .setClaims(extraClaims)
-        .setSubject(userDetails.getUsername())
+        .setSubject(String.valueOf(user.getId()))
         .setIssuedAt(new Date(System.currentTimeMillis()))
 
         // valid for 24 hours + 1000 millis
@@ -71,8 +72,8 @@ public class JwtService {
     }
   }
 
-  public boolean isTokenValid(String token, UserDetails userDetails) {
-    final String username = extractUsername(token);
-    return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+  public boolean isTokenValid(String token, User user) {
+    final String userid = extractSubject(token);
+    return userid.equals(String.valueOf(user.getId())) && !isTokenExpired(token);
   }
 }

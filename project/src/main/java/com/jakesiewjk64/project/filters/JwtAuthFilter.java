@@ -8,15 +8,15 @@ import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jakesiewjk64.project.facades.IAuthenticationFacade;
+import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.services.JwtService;
+import com.jakesiewjk64.project.services.UserService;
 
 import jakarta.annotation.Nonnull;
 import jakarta.servlet.FilterChain;
@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
   private final JwtService jwtService;
-  private final UserDetailsService userDetailsService;
+  private final UserService userService;
   private final IAuthenticationFacade authenticationFacade;
   private static final String[] WHITE_LIST_URL = {
       "/api/v1/auth"
@@ -45,7 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     try {
       final String authHeader = request.getHeader("Authorization");
       final String jwt;
-      final String email;
+      final String userId;
       final String requestPath = request.getServletPath();
 
       if (authHeader == null || !authHeader.startsWith("Bearer ")
@@ -55,11 +55,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
       }
 
       jwt = authHeader.substring(7);
-      email = jwtService.extractUsername(jwt);
+      userId = jwtService.extractSubject(jwt);
 
-      if (email != null && authenticationFacade.getAuthentication() == null) {
+      if (userId != null && authenticationFacade.getAuthentication() == null) {
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+        User userDetails = userService.findUserById(Integer.parseInt(userId)).orElseThrow();
 
         if (jwtService.isTokenValid(jwt, userDetails)) {
 

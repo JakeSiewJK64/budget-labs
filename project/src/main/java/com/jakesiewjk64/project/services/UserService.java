@@ -22,9 +22,22 @@ public class UserService {
   public Optional<User> findUserByEmail(String email) {
     return userRepository.findUserByEmail(email);
   }
+  
+  public Optional<User> findUserById(int id) {
+    return userRepository.findById(id);
+  }
 
   public User saveUser(User user) {
     return userRepository.save(user);
+  }
+
+  public User partialUpdateUser(UserResponseDto user) {
+    User targetUser = userRepository.findById(user.getId()).orElseThrow();
+    targetUser.setFirst_name(user.getFirst_name());
+    targetUser.setLast_name(user.getLast_name());
+    targetUser.setEmail(user.getEmail());
+
+    return userRepository.save(targetUser);
   }
 
   public Page<UserResponseDto> findAll(String email, Pageable pageable) throws Exception {
