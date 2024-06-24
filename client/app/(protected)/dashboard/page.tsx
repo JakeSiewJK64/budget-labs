@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { MdCalendarMonth, MdCheckCircle } from "react-icons/md";
+import { MdCalendarMonth, MdCheckCircle, MdMoneyOff } from "react-icons/md";
 import { CiCoinInsert } from "react-icons/ci";
 import { FaMoneyBill } from "react-icons/fa";
 import { useGetCurrentUser } from "@/hooks/queries/users";
@@ -85,6 +85,14 @@ const Page = async ({
             title: "Total spending today",
             value: stats[currentMonthValue].current_day_total,
             icon: <MdCheckCircle color="white" />,
+          },
+          {
+            color: "#f1c4ff",
+            title: "Average spending this month",
+            value:
+              stats[currentMonthValue].total_expense /
+              stats[currentMonthValue].expense_arr.length,
+            icon: <MdMoneyOff color="white" />,
           },
         ]}
       />
