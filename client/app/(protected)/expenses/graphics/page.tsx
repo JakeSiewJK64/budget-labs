@@ -22,7 +22,7 @@ const Page = async ({ searchParams }: { searchParams: DateRangeURLParam }) => {
     ).format("YYYY-MM-DD"),
   });
 
-  const currentDayExpenses = stats[currentMonth].expense_arr.map((expense) => ({
+  const currentDayExpenses = (stats[currentMonth]?.expense_arr ?? []).map((expense) => ({
     name: dayjs(expense.date).format("YYYY-MM-DD"),
     value: expense.amount,
   }));
