@@ -10,6 +10,11 @@ export type PaginationURLParam = {
   page?: number;
 };
 
+export type SortByURLParam = {
+  sortBy?: string;
+  order?: string;
+};
+
 export type DateRangeURLParam = {
   start_date?: string;
   end_date?: string;

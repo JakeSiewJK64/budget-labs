@@ -31,6 +31,8 @@ export async function useGetAllExpensesById(args: {
   page: number;
   start_date?: string;
   end_date?: string;
+  sortBy?: string;
+  order?: string;
 }): Promise<z.output<typeof ExpenseResponseSchema>> {
   const axios = getAxiosInstance();
   const res = await axios

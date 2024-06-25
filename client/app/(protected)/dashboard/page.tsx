@@ -11,6 +11,7 @@ import {
   DateRangeURLParam,
   PaginationRequestSchema,
   PaginationURLParam,
+  SortByURLParam,
 } from "@/types/global";
 import { expenseColumns } from "@/lib/columns";
 import { DateRangePicker } from "@/components/native";
@@ -21,7 +22,7 @@ import { DashboardCards } from "@/components/native/Dashboard";
 const Page = async ({
   searchParams,
 }: {
-  searchParams: PaginationURLParam & DateRangeURLParam;
+  searchParams: PaginationURLParam & DateRangeURLParam & SortByURLParam;
 }) => {
   const user = await useGetCurrentUser();
   const paginationInfo = PaginationRequestSchema.parse(searchParams);
@@ -47,6 +48,8 @@ const Page = async ({
     user_id: user.id,
     start_date: searchParams.start_date,
     end_date: searchParams.end_date,
+    order: searchParams.order,
+    sortBy: searchParams.sortBy,
   });
 
   return (
