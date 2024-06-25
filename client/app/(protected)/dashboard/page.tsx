@@ -17,8 +17,6 @@ import { DateRangePicker } from "@/components/native";
 import { GenericTable } from "@/components/native/GenericTable";
 import { ExpenseModal, ExportExpenseButton } from "@/components/native/Expense";
 import { DashboardCards } from "@/components/native/Dashboard";
-import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
 
 const Page = async ({
   searchParams,
