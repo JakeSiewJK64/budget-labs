@@ -27,7 +27,10 @@ export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
     accessorKey: "id",
     cell: (info) => (
       <div className="flex flex-row gap-1">
-        <a className={buttonVariants()} href={`/expenses/${info.getValue()}`}>
+        <a
+          className={buttonVariants({ size: "sm" })}
+          href={`/expenses/${info.getValue()}`}
+        >
           View Details
         </a>
         <ExpenseColumnDeleteButton expense_id={String(info.getValue())} />

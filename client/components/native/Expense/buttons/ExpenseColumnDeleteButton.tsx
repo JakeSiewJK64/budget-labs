@@ -38,7 +38,11 @@ export const ExpenseColumnDeleteButton = ({
           });
       }}
     >
-      <Button size="icon" variant="destructive">
+      <Button
+        size="sm"
+        variant="ghost"
+        className="text-[#ef4444] hover:text-[white] hover:bg-[#ef4444]"
+      >
         <TrashIcon />
       </Button>
     </form>
