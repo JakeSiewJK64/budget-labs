@@ -22,7 +22,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SortHeader } from "./SortHeader";
 import GenericPagination from "./GenericPagination";
+
+export { SortHeader };
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
