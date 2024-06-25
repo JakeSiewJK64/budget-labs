@@ -17,9 +17,9 @@ export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
   },
   {
     accessorKey: "date",
-    header: () => {
+    header: ({ header }) => {
       const param = useSearchParams();
-      const sortByDate = param.get("sortBy") === "date";
+      const sortByDate = param.get("sortBy") === header.id;
       const ascending = param.get("order") === "0";
       const newURL = new URLSearchParams(param.toString());
       const sortButton = () => {
@@ -28,12 +28,12 @@ export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
             newURL.set("order", "1");
             return [<ArrowUp className="ml-2 h-4 w-4" />, newURL];
           }
-          
+
           newURL.set("order", "0");
           return [<ArrowDown className="ml-2 h-4 w-4" />, newURL];
         }
 
-        newURL.set("sortBy", "date");
+        newURL.set("sortBy", header.id);
         return [<ArrowUpDown className="ml-2 h-4 w-4" />, newURL];
       };
 
@@ -50,9 +50,9 @@ export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
   },
   {
     accessorKey: "amount",
-    header: () => {
+    header: ({ header }) => {
       const param = useSearchParams();
-      const sortByAmount = param.get("sortBy") === "amount";
+      const sortByAmount = param.get("sortBy") === header.id;
       const ascending = param.get("order") === "0";
       const newURL = new URLSearchParams(param.toString());
       const sortButton = () => {
@@ -61,12 +61,12 @@ export const expenseColumns: ColumnDef<z.infer<typeof ExpenseSchema>>[] = [
             newURL.set("order", "1");
             return [<ArrowUp className="ml-2 h-4 w-4" />, newURL];
           }
-          
+
           newURL.set("order", "0");
           return [<ArrowDown className="ml-2 h-4 w-4" />, newURL];
         }
 
-        newURL.set("sortBy", "amount");
+        newURL.set("sortBy", header.id);
         return [<ArrowUpDown className="ml-2 h-4 w-4" />, newURL];
       };
 
