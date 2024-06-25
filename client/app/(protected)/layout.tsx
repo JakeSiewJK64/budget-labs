@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 const routes = [
   { path: "/dashboard", label: "Dashboard" },
   { path: "/expenses/graphics", label: "Expense Statistics" },
-  { path: "/settings", label: "Settings" },
+  { path: "/settings/user-details", label: "Settings" },
 ];
 
 const ProtectedLayout = ({
