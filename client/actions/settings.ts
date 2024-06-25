@@ -4,8 +4,6 @@ import { DefaultUserValues } from "@/hooks/form/useUserSettingsForm";
 import { getAxiosInstance } from "@/utils";
 
 export async function updateUserDetailsSettings(args: DefaultUserValues) {
-  console.log(args);
-
   const axios = getAxiosInstance();
   const res = await axios
     .patch("/settings/updateUserDetails", args)
