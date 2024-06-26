@@ -13,3 +13,24 @@ export async function updateUserDetailsSettings(args: DefaultUserValues) {
     });
   return res.data;
 }
+
+export async function updateUserExpenseDetails({
+  userId,
+  args,
+}: {
+  args: { income: number };
+  userId: string;
+}) {
+  const axios = getAxiosInstance();
+  const res = await axios
+    .patch("/settings/updateUserExpenseDetails", args, {
+      params: {
+        userId,
+      },
+    })
+    .catch((err) => {
+      const errorMessage = err.response.data.message;
+      return { data: errorMessage, status: 403 };
+    });
+  return res.data;
+}
