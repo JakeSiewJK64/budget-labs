@@ -51,6 +51,8 @@ const Page = async ({
     order: searchParams.order,
     sortBy: searchParams.sortBy,
   });
+  const expenseAgainstIncome =
+    user.income - stats[currentMonthValue].total_expense;
 
   return (
     <div className="flex flex-col">
@@ -95,6 +97,13 @@ const Page = async ({
               : stats[currentMonthValue].total_expense /
                 stats[currentMonthValue].expense_arr.length,
             icon: <MdMoneyOff color="white" />,
+          },
+          {
+            color: "#22c55e",
+            title: "Expense against income",
+            value: expenseAgainstIncome,
+            icon: <MdMoneyOff color="white" />,
+            description: "Difference between your expenses and your income.",
           },
         ]}
       />
