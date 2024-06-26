@@ -5,14 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
-public class UserResponseDto {
-  private int id;
-  private String email;
-  private String first_name;
-  private String last_name;
+public class UserSettingsRequestDto {
   private double income;
 }

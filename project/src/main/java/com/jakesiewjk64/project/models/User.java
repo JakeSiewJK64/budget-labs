@@ -32,6 +32,7 @@ public class User implements UserDetails {
   private String contact_number;
   private String email;
   private String password;
+  private double income;
 
   @Override
   public String getUsername() {

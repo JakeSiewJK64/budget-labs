@@ -8,6 +8,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.jakesiewjk64.project.dto.UserResponseDto;
+import com.jakesiewjk64.project.dto.UserSettingsRequestDto;
 import com.jakesiewjk64.project.models.User;
 import com.jakesiewjk64.project.repositories.IUserRepository;
 import com.jakesiewjk64.project.specifications.UserSpecification;
@@ -22,13 +23,20 @@ public class UserService {
   public Optional<User> findUserByEmail(String email) {
     return userRepository.findUserByEmail(email);
   }
-  
+
   public Optional<User> findUserById(int id) {
     return userRepository.findById(id);
   }
 
   public User saveUser(User user) {
     return userRepository.save(user);
+  }
+
+  public User updateUserExpenseDetails(int userId, UserSettingsRequestDto settings) {
+    User targetUser = userRepository.findById(Integer.valueOf(userId)).orElseThrow();
+    targetUser.setIncome(settings.getIncome());
+
+    return userRepository.save(targetUser);
   }
 
   public User partialUpdateUser(UserResponseDto user) {
@@ -50,11 +58,12 @@ public class UserService {
 
       Page<User> usersResult = userRepository.findAll(spec, pageable);
 
-      return usersResult.map(user -> new UserResponseDto(
-          user.getId(),
-          user.getEmail(),
-          user.getFirst_name(),
-          user.getLast_name()));
+      return usersResult.map(user -> UserResponseDto.builder()
+          .id(user.getId())
+          .email(user.getEmail())
+          .first_name(user.getFirst_name())
+          .last_name(user.getLast_name())
+          .income(user.getIncome()).build());
     } catch (Exception e) {
       throw new Exception("Could not query for users. If this error persists please contact support.");
     }
