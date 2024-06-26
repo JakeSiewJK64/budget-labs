@@ -85,7 +85,7 @@ public class ExpenseService {
       specs = specs.and(ExpenseSpecification.equalsUserId(Integer.valueOf(userId)));
       specs = specs.and(ExpenseSpecification.withinDateRange(startDate, endDate));
 
-      List<Expense> expenseList = expenseRepository.findAll(specs);
+      List<Expense> expenseList = expenseRepository.findAll(specs, Sort.by(Sort.Direction.DESC, "date"));
 
       // iterate and append expense into csv
       for (Expense e : expenseList) {
